@@ -4,7 +4,7 @@
 #include <iostream>
 #include <list>
 
-#include "PhysicsObject.h"
+#include "Sphere.h"
 #include "Rigidbody.h"
 
 using std::cout;
@@ -26,6 +26,14 @@ public:
 
 	void setTimeStep(const float timeStep) { m_timeStep = timeStep; }
 	float getTimeStep() const { return m_timeStep; }
+
+	void checkForCollision();
+
+	static bool plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+
 
 protected:
 

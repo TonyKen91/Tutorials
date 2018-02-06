@@ -90,6 +90,63 @@ void PhysicsScene::debugScene()
 	}
 }
 
+typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
+
+static fn collisionFunctionArray[] =
+{
+	PhysicsScene::plane2Plane, PhysicsScene::plane2Sphere,
+	PhysicsScene::sphere2Plane, PhysicsScene::sphere2Sphere,
+};
+
+void PhysicsScene::checkForCollision()
+{
+	int actorCount = m_actors.size();
+
+	//need to check for collisions against all objects except thsi one
+	for (int outer = 0; outer < actorCount - 1; outer++)
+	{
+		for (int inner = outer + 1; inner < actorCount; inner++)
+		{
+			PhysicsObject* object1 = m_actors[outer];
+			PhysicsObject* object2 = m_actors[inner];
+			int shapeId1 = object1->getShapeID();
+			int shapeId2 = object2->getShapeID();
+
+			// using function pointers
+			int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
+			fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
+			if (collisionFunctionPtr != nullptr)
+			{
+				// did a collision occur
+				collisionFunctionPtr(object1, object2);
+			}
+
+		}
+	}
+}
+
+bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)
+{
+	return false;
+}
+
+bool PhysicsScene::plane2Sphere(PhysicsObject *, PhysicsObject *)
+{
+	return false;
+}
+
+bool PhysicsScene::sphere2Plane(PhysicsObject *, PhysicsObject *)
+{
+	return false;
+}
+
+bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
+{
+	// try to cast objects to sphere and sphere
+	Sphere *sphere1 = dynamic_cast<Sphere*>(obj1);
+	Sphere *sphere2 = dynamic_cast<Sphere*>(obj2);
+	return false;
+}
 
 //void RemoveFromVector(std::vector<int>& vec, int entry)
 //{
