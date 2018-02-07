@@ -1,7 +1,6 @@
 #include "PhysicsScene.h"
 
 
-
 PhysicsScene::PhysicsScene() : m_timeStep(0.01f), m_gravity(glm::vec2(0,0))
 {
 
@@ -94,21 +93,23 @@ typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
 
 static fn collisionFunctionArray[] =
 {
-	PhysicsScene::plane2Plane, PhysicsScene::plane2Sphere,
-	PhysicsScene::sphere2Plane, PhysicsScene::sphere2Sphere,
+	PhysicsScene::plane2Plane, PhysicsScene::plane2Sphere, PhysicsScene::plane2Box,
+	PhysicsScene::sphere2Plane, PhysicsScene::sphere2Sphere, PhysicsScene::sphere2Box,
+	PhysicsScene::box2Plane, PhysicsScene::box2Sphere, PhysicsScene::box2Box,
 };
 
 void PhysicsScene::checkForCollision()
 {
 	int actorCount = m_actors.size();
 
-	//need to check for collisions against all objects except thsi one
-	for (int outer = 0; outer < actorCount - 1; outer++)
+	//need to check for collisions against all objects except this one
+	for (auto it = m_actors.begin(); it!= std::prev(m_actors.end()); it++)
 	{
-		for (int inner = outer + 1; inner < actorCount; inner++)
+		PhysicsObject* object1 = *it;
+		for (auto it2 = std::next(it); it2 != m_actors.end(); it2++)
 		{
-			PhysicsObject* object1 = m_actors[outer];
-			PhysicsObject* object2 = m_actors[inner];
+			PhysicsObject* object2 = *it2;
+	
 			int shapeId1 = object1->getShapeID();
 			int shapeId2 = object2->getShapeID();
 
@@ -120,9 +121,31 @@ void PhysicsScene::checkForCollision()
 				// did a collision occur
 				collisionFunctionPtr(object1, object2);
 			}
-
 		}
 	}
+
+
+
+	//for (std::list<PhysicsObject*>::iterator outer = 0; outer < actorCount - 1; outer++)
+	//{
+	//	for (int inner = outer + 1; inner < actorCount; inner++)
+	//	{
+	//		PhysicsObject* object1 = m_actors[outer];
+	//		PhysicsObject* object2 = m_actors[inner];
+	//		int shapeId1 = object1->getShapeID();
+	//		int shapeId2 = object2->getShapeID();
+
+	//		// using function pointers
+	//		int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
+	//		fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
+	//		if (collisionFunctionPtr != nullptr)
+	//		{
+	//			// did a collision occur
+	//			collisionFunctionPtr(object1, object2);
+	//		}
+
+	//	}
+	//}
 }
 
 bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)
@@ -131,6 +154,11 @@ bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)
 }
 
 bool PhysicsScene::plane2Sphere(PhysicsObject *, PhysicsObject *)
+{
+	return false;
+}
+
+bool PhysicsScene::plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 {
 	return false;
 }
@@ -145,6 +173,32 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 	// try to cast objects to sphere and sphere
 	Sphere *sphere1 = dynamic_cast<Sphere*>(obj1);
 	Sphere *sphere2 = dynamic_cast<Sphere*>(obj2);
+	// if we are successful then test for collision
+	if (sphere1 != nullptr && sphere2 != nullptr)
+	{
+
+	}
+
+	return false;
+}
+
+bool PhysicsScene::sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::box2Box(PhysicsObject * obj1, PhysicsObject * obj2)
+{
 	return false;
 }
 
