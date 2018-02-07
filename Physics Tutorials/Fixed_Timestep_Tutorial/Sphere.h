@@ -12,6 +12,10 @@ public:
 	float getRadius() { return m_radius; }
 	glm::vec4 getColour() { return m_colour; }
 
+	virtual void Collide(PhysicsObject* obj) { obj->CollideWithSphere(this); }
+
+	virtual void CollideWithSphere(Sphere* pOther) { pOther->CollideWithSphere(this); }
+
 	//virtual void CollideWithObj(PhysicsObject* obj) { obj->CollideWithSphere(this); }
 	//virtual void CollideWithSphere(Sphere * sphere);
 

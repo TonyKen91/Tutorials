@@ -121,31 +121,12 @@ void PhysicsScene::checkForCollision()
 				// did a collision occur
 				collisionFunctionPtr(object1, object2);
 			}
+
+			object1->
 		}
 	}
 
 
-
-	//for (std::list<PhysicsObject*>::iterator outer = 0; outer < actorCount - 1; outer++)
-	//{
-	//	for (int inner = outer + 1; inner < actorCount; inner++)
-	//	{
-	//		PhysicsObject* object1 = m_actors[outer];
-	//		PhysicsObject* object2 = m_actors[inner];
-	//		int shapeId1 = object1->getShapeID();
-	//		int shapeId2 = object2->getShapeID();
-
-	//		// using function pointers
-	//		int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
-	//		fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
-	//		if (collisionFunctionPtr != nullptr)
-	//		{
-	//			// did a collision occur
-	//			collisionFunctionPtr(object1, object2);
-	//		}
-
-	//	}
-	//}
 }
 
 bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)

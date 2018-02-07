@@ -18,6 +18,7 @@ public:
 	float getRotation() { return m_rotation; }
 	float getMass() { return m_mass; }
 
+
 protected:
 	glm::vec2 m_position;
 	glm::vec2 m_velocity;

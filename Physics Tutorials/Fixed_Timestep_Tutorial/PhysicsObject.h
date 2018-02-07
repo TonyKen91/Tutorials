@@ -5,6 +5,10 @@
 #include <glm\ext.hpp>
 #include <Gizmos.h>
 
+class Sphere;
+class Plane;
+class Box;
+
 enum ShapeType {
 	PLANE = 0,
 	SPHERE,
@@ -22,6 +26,11 @@ public:
 	virtual void debug() = 0;
 	virtual void draw() = 0;
 	virtual void resetPosition() {};
+
+	virtual void CollideWithSphere(Sphere* pOther) = 0;
+	virtual void CollideWithPlane(Plane* pOther) = 0;
+	virtual void CollideWithBox(Box* pOther) = 0;
+
 	~PhysicsObject();
 	ShapeType getShapeID() { return m_shapeID; }
 

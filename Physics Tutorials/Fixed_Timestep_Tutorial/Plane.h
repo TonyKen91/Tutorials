@@ -1,7 +1,6 @@
 #pragma once
 #include "PhysicsObject.h"
-class Plane :
-	public PhysicsObject
+class Plane : public PhysicsObject
 {
 public:
 	Plane();
@@ -15,6 +14,8 @@ public:
 
 	glm::vec2 getNormal() { return m_normal; }
 	float getDistance() { return m_distanceToOrigin; }
+
+	virtual void Collide(PhysicsObject* obj) { obj->CollideWithPlane(this); }
 
 protected:
 	glm::vec2 m_normal;
