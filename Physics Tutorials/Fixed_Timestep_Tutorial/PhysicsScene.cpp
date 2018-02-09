@@ -46,26 +46,28 @@ void PhysicsScene::update(float dt)
 		// check for collisions (ideally you'd want to have some sort of
 		// scene management in place)
 
-		for (auto pActor : m_actors)
-		{
-			for (auto pOther : m_actors)
-			{
-				if (pActor == pOther)
-					continue;
-				if (std::find(dirty.begin(), dirty.end(), pActor) != dirty.end() &&
-					std::find(dirty.begin(), dirty.end(), pOther) != dirty.end())
-					continue;
+		checkForCollision();
 
-				Rigidbody* pRigid = dynamic_cast<Rigidbody*>(pActor);
-				if (pRigid->checkCollision(pOther) == true)
-				{
-					//pRigid->applyForceToActor(dynamic_cast<Rigidbody*>(pOther),
-					//	pRigid->getVelocity() * pRigid->getMass());
-					dirty.push_back(pRigid);
-					dirty.push_back(pOther);
-				}
-			}
-		}
+		//for (auto pActor : m_actors)
+		//{
+		//	for (auto pOther : m_actors)
+		//	{
+		//		if (pActor == pOther)
+		//			continue;
+		//		if (std::find(dirty.begin(), dirty.end(), pActor) != dirty.end() &&
+		//			std::find(dirty.begin(), dirty.end(), pOther) != dirty.end())
+		//			continue;
+
+		//		Rigidbody* pRigid = dynamic_cast<Rigidbody*>(pActor);
+		//		if (pRigid->checkCollision(pOther) == true)
+		//		{
+		//			//pRigid->applyForceToActor(dynamic_cast<Rigidbody*>(pOther),
+		//			//	pRigid->getVelocity() * pRigid->getMass());
+		//			dirty.push_back(pRigid);
+		//			dirty.push_back(pOther);
+		//		}
+		//	}
+		//}
 		dirty.clear();
 	}
 }
@@ -109,20 +111,21 @@ void PhysicsScene::checkForCollision()
 		for (auto it2 = std::next(it); it2 != m_actors.end(); it2++)
 		{
 			PhysicsObject* object2 = *it2;
+
+			object1->Collide(object2);
 	
-			int shapeId1 = object1->getShapeID();
-			int shapeId2 = object2->getShapeID();
+			//int shapeId1 = object1->getShapeID();
+			//int shapeId2 = object2->getShapeID();
 
-			// using function pointers
-			int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
-			fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
-			if (collisionFunctionPtr != nullptr)
-			{
-				// did a collision occur
-				collisionFunctionPtr(object1, object2);
-			}
+			//// using function pointers
+			//int functionIdx = (shapeId1 * SHAPE_COUNT) + shapeId2;
+			//fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
+			//if (collisionFunctionPtr != nullptr)
+			//{
+			//	// did a collision occur
+			//	collisionFunctionPtr(object1, object2);
+			//}
 
-			object1->
 		}
 	}
 

@@ -30,6 +30,7 @@ public:
 	virtual void CollideWithSphere(Sphere* pOther) = 0;
 	virtual void CollideWithPlane(Plane* pOther) = 0;
 	virtual void CollideWithBox(Box* pOther) = 0;
+	virtual void Collide(PhysicsObject* obj) = 0;
 
 	~PhysicsObject();
 	ShapeType getShapeID() { return m_shapeID; }

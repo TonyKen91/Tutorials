@@ -17,6 +17,10 @@ public:
 
 	virtual void Collide(PhysicsObject* obj) { obj->CollideWithPlane(this); }
 
+	virtual void CollideWithSphere(Sphere* pOther);
+	virtual void CollideWithPlane(Plane* pOther);
+	virtual void CollideWithBox(Box* pOther);
+
 protected:
 	glm::vec2 m_normal;
 	float m_distanceToOrigin;

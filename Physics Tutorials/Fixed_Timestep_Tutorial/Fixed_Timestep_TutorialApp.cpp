@@ -27,17 +27,21 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
 
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec2(0, -0));
+	m_physicsScene->setGravity(vec2(0, 0));
 	m_physicsScene->setTimeStep(0.01f);
 
-	Sphere* ball1 = new Sphere(vec2(0, 0), vec2(0, 0), 4.0f, 4, vec4(1, 0, 0, 1));
-//	Sphere* ball2 = new Sphere(vec2(10, 0), vec2(0, 0), 1.0f, 1, vec4(0, 1, 0, 1));
+	Sphere* ball1 = new Sphere(vec2(0, -10), vec2(0, 0), 4.0f, 4, vec4(1, 0, 0, 1));
+	Sphere* ball2 = new Sphere(vec2(10, -4), vec2(0, 0), 1.0f, 1, vec4(0, 1, 0, 1));
 
 	m_physicsScene->addActor(ball1);
-//	m_physicsScene->addActor(ball2);
+	m_physicsScene->addActor(ball2);
 
-	ball1->applyForce(vec2(4, 0));
-//	ball2->applyForce(vec2(0, 0));
+	ball1->applyForce(vec2(4, 10));
+	ball2->applyForce(vec2(0, 10));
+
+	Plane* plane1 = new Plane();
+	
+	m_physicsScene->addActor(plane1);
 
 
 	//Sphere* ball;

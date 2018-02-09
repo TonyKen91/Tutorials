@@ -1,4 +1,5 @@
 #include "Sphere.h"
+#include "Plane.h"
 #include <iostream>
 
 Sphere::Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour) :
@@ -15,7 +16,7 @@ Sphere::~Sphere()
 
 void Sphere::draw()
 {
-	aie::Gizmos::add2DCircle(m_position, m_radius, 10, m_colour);
+	aie::Gizmos::add2DCircle(m_position, m_radius, m_segments, m_colour);
 }
 
 bool Sphere::checkCollision(PhysicsObject * pOther)
@@ -29,4 +30,38 @@ bool Sphere::checkCollision(PhysicsObject * pOther)
 			return false;
 	}
 	return false;
+}
+
+void Sphere::CollideWithSphere(Sphere * pOther)
+{
+	if ((m_radius + pOther->m_radius) > glm::distance(m_position, pOther->m_position))
+	{
+		m_velocity *= 0;
+		pOther->m_velocity *= 0;
+	}
+
+}
+
+void Sphere::CollideWithPlane(Plane* pOther)
+{
+	glm::vec2 collisionNormal = pOther->getNormal();
+
+	float sphereToPlane = glm::dot(m_position, pOther->getNormal()) - pOther->getDistance();
+
+	// if the sphere is behind the plane then both need to be flipped
+	if (sphereToPlane < 0)
+	{
+		collisionNormal *= -1;
+		sphereToPlane *= -1;
+	}
+
+	float interesection = m_radius - sphereToPlane;
+	if (interesection > 0)
+	{
+		m_velocity *= 0;
+	}
+}
+
+void Sphere::CollideWithBox(Box * pOther)
+{
 }

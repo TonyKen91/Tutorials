@@ -14,7 +14,9 @@ public:
 
 	virtual void Collide(PhysicsObject* obj) { obj->CollideWithSphere(this); }
 
-	virtual void CollideWithSphere(Sphere* pOther) { pOther->CollideWithSphere(this); }
+	virtual void CollideWithSphere(Sphere* pOther);
+	virtual void CollideWithPlane(Plane* pOther);
+	virtual void CollideWithBox(Box* pOther);
 
 	//virtual void CollideWithObj(PhysicsObject* obj) { obj->CollideWithSphere(this); }
 	//virtual void CollideWithSphere(Sphere * sphere);
@@ -22,5 +24,6 @@ public:
 protected:
 	float m_radius;
 	glm::vec4 m_colour;
+	int m_segments = 50;
 };
 

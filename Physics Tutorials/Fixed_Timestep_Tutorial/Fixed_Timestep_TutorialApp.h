@@ -6,6 +6,7 @@
 #include "PhysicsScene.h"
 
 #include "Sphere.h"
+#include "Plane.h"
 
 using glm::vec2;
 using glm::vec4;

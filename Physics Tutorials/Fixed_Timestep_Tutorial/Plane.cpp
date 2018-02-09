@@ -1,4 +1,5 @@
 #include "Plane.h"
+#include "Sphere.h"
 
 using glm::vec2;
 using glm::vec3;
@@ -11,16 +12,12 @@ Plane::Plane() : PhysicsObject(ShapeType::PLANE)
 	m_normal = vec2(0, 1);
 }
 
-Plane::Plane(glm::vec2 normal, float distance)
+Plane::Plane(glm::vec2 normal, float distance) : PhysicsObject(ShapeType::PLANE), m_normal(normal), m_distanceToOrigin(distance)
 {
 }
 
 
 Plane::~Plane()
-{
-}
-
-void Plane::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
 }
 
@@ -39,5 +36,34 @@ void Plane::draw()
 }
 
 void Plane::resetPosition()
+{
+}
+
+void Plane::CollideWithSphere(Sphere * pOther)
+{
+	pOther->CollideWithPlane(this);
+	//glm::vec2 collisionNormal = m_normal;
+
+	//float sphereToPlane = glm::dot(pOther->getPosition() , m_normal) - m_distanceToOrigin;
+
+	//// if the sphere is behind the plane then both need to be flipped
+	//if (sphereToPlane < 0)
+	//{
+	//	collisionNormal *= -1;
+	//	sphereToPlane *= -1;
+	//}
+
+	//float interesection = pOther->getRadius() - sphereToPlane;
+	//if (interesection > 0)
+	//	pOther->getVelocity *= 0;
+
+}
+
+void Plane::CollideWithPlane(Plane * pOther)
+{
+	// Collision detection for these planes is not required
+}
+
+void Plane::CollideWithBox(Box * pOther)
 {
 }
