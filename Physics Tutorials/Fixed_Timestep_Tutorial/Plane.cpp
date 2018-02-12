@@ -1,5 +1,6 @@
 #include "Plane.h"
 #include "Sphere.h"
+#include "Rigidbody.h"
 
 using glm::vec2;
 using glm::vec3;
@@ -10,10 +11,12 @@ Plane::Plane() : PhysicsObject(ShapeType::PLANE)
 {
 	m_distanceToOrigin = 0;
 	m_normal = vec2(0, 1);
+	m_elasticity = 1;
 }
 
-Plane::Plane(glm::vec2 normal, float distance) : PhysicsObject(ShapeType::PLANE), m_normal(normal), m_distanceToOrigin(distance)
+Plane::Plane(glm::vec2 normal, float distance, float elasticity) : PhysicsObject(ShapeType::PLANE), m_normal(normal), m_distanceToOrigin(distance), m_elasticity(elasticity)
 {
+	m_normal = glm::normalize(m_normal);
 }
 
 
@@ -37,6 +40,17 @@ void Plane::draw()
 
 void Plane::resetPosition()
 {
+}
+
+void Plane::resolveCollision(Rigidbody* actor2)
+{
+
+	float elasticity = (1 + actor2->getElasticity()) / 2.0f;
+	float j = (glm::dot(-(1 + elasticity) * (actor2->getVelocity()), m_normal)) / glm::dot(m_normal, m_normal * (1 / actor2->getMass()));
+
+	glm::vec2  force = m_normal * j;
+
+	actor2->applyForce(force, );
 }
 
 void Plane::CollideWithSphere(Sphere * pOther)
