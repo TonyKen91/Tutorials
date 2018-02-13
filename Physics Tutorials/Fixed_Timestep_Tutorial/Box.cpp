@@ -31,6 +31,8 @@ void Box::fixedUpdate(glm::vec2 gravity, float timeStep)
 
 void Box::CollideWithSphere(Sphere* pOther)
 {
+	glm::vec2 circlePos = pOther->getPosition() - m_position;
+	float w2 = m_width / 2, h2 = m_height / 2;
 }
 
 void Box::CollideWithPlane(Plane* pOther)
