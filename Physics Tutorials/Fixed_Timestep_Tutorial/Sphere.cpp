@@ -17,7 +17,10 @@ Sphere::~Sphere()
 
 void Sphere::draw()
 {
+	glm::vec2 end = glm::vec2(std::cos(m_rotation), std::sin(m_rotation))* m_radius;
+
 	aie::Gizmos::add2DCircle(m_position, m_radius, m_segments, m_colour);
+	aie::Gizmos::add2DLine(m_position, m_position + end, glm::vec4(1, 1, 1, 1));
 }
 
 bool Sphere::checkCollision(PhysicsObject * pOther)
@@ -37,7 +40,8 @@ void Sphere::CollideWithSphere(Sphere * pOther)
 {
 	if ((m_radius + pOther->m_radius) > glm::distance(m_position, pOther->m_position))
 	{
-		resolveCollision(pOther, , );
+
+		resolveCollision(pOther, 0.5f * (m_position + pOther->getPosition()));
 	}
 
 }
@@ -58,7 +62,8 @@ void Sphere::CollideWithPlane(Plane* pOther)
 	float interesection = m_radius - sphereToPlane;
 	if (interesection > 0)
 	{
-		pOther->resolveCollision(this);
+		glm::vec2 contact = m_position + (collisionNormal * -m_radius);
+		pOther->resolveCollision(this, contact);
 	}
 }
 

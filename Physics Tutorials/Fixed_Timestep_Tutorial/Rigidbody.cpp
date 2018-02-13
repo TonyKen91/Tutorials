@@ -18,8 +18,8 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
-	if (m_isKinematic)
-		return;
+	//if (m_isKinematic)
+	//	return;
 
 	m_velocity *= (1 - m_linearDrag * timeStep);
 	m_angularVelocity *= (1 - m_angularDrag * timeStep);
@@ -31,7 +31,7 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 
 
 	m_position += m_velocity * timeStep;
-	applyForce(gravity * m_mass * timeStep, );
+	applyForce(gravity * m_mass * timeStep);
 }
 
 void Rigidbody::debug()
@@ -47,8 +47,8 @@ void Rigidbody::applyForce(glm::vec2 force, glm::vec2 pos)
 
 void Rigidbody::applyForceToActor(Rigidbody * actor2, glm::vec2 force)
 {
-	actor2->applyForce(force, );
-	applyForce(-force, );
+	actor2->applyForce(force);
+	applyForce(-force);
 }
 
 void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec2* collisionNormal)
@@ -56,8 +56,10 @@ void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec
 	// find the vector between their centres or use the provided direction of force
 	glm::vec2 normal = collisionNormal ? *collisionNormal : glm::normalize(actor2->m_position - m_position);
 
-	// get the vector perpe3ndicular to the collision normal
+	// get the vector perpendicular to the collision normal
 	glm::vec2 perp(normal.y, -normal.x);
+
+	// get the contact point when the collision occurs
 
 	// determine the total velocity of the contact points for the two objects, for both linear and rotational
 

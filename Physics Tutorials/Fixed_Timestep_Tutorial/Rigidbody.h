@@ -8,7 +8,7 @@ public:
 
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
 	virtual void debug();
-	void applyForce(glm::vec2 force, glm::vec2 pos);
+	void applyForce(glm::vec2 force, glm::vec2 pos = {0, 0});
 	void applyForceToActor(Rigidbody* actor2, glm::vec2 force);
 	void resolveCollision(Rigidbody* actor2, glm::vec2 contact, glm::vec2* collisionNormal = nullptr);
 
@@ -34,7 +34,8 @@ protected:
 	float m_angularVelocity;
 	float m_elasticity;
 
-	float m_rotation;
 	float m_inertia;
+
+	bool m_isKinematic = false;
 };
 
