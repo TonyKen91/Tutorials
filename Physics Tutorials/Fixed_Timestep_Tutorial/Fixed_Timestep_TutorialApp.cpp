@@ -31,17 +31,17 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	m_physicsScene->setTimeStep(0.001f);
 
 	Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 2.0f, 2, vec4(1, 0, 0, 1));
-	Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 1.0f, 1, vec4(0, 1, 0, 1));
+	Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 0, 1));
 	Sphere* ball3 = new Sphere(vec2(0, 10), vec2(0, 0), 2.0f, 2, vec4(1, 1, 0, 1));
-	Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 1.0f, 1, vec4(0, 1, 1, 1));
+	Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 1, 1));
 
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
 	m_physicsScene->addActor(ball3);
 	m_physicsScene->addActor(ball4);
 
-	ball1->applyForce(vec2(100, -10));
-	ball2->applyForce(vec2(-100, -10));
+	ball1->applyForce(vec2(100, -10), vec2(0, 0));
+	ball2->applyForce(vec2(-100, -10), vec2(0, 0));
 
 	Plane* plane1 = new Plane();
 	Plane* plane2 = new Plane(glm::vec2(-1, 3), 20);

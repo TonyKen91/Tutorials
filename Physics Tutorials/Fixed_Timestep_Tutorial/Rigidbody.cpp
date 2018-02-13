@@ -7,7 +7,7 @@
 Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float rotation, float mass, float elasticity, float linearDrag, float angularDrag) :
 	PhysicsObject(shapeID), m_position (position), m_velocity (velocity), m_rotation(rotation), m_mass(mass), m_elasticity(elasticity), m_linearDrag(linearDrag), m_angularDrag(angularDrag)
 {
-
+	m_angularVelocity = 0;
 }
 
 
@@ -31,7 +31,7 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 
 
 	m_position += m_velocity * timeStep;
-	applyForce(gravity * m_mass * timeStep);
+	applyForce(gravity * m_mass * timeStep, glm::vec2(0, 0));
 }
 
 void Rigidbody::debug()
@@ -47,8 +47,8 @@ void Rigidbody::applyForce(glm::vec2 force, glm::vec2 pos)
 
 void Rigidbody::applyForceToActor(Rigidbody * actor2, glm::vec2 force)
 {
-	actor2->applyForce(force);
-	applyForce(-force);
+	actor2->applyForce(force, glm::vec2(0, 0));
+	applyForce(-force, glm::vec2(0, 0));
 }
 
 void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec2* collisionNormal)
