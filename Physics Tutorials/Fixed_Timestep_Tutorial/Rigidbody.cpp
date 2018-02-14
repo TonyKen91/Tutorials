@@ -1,4 +1,5 @@
 #include "Rigidbody.h"
+#include "PhysicsScene.h"
 #include <iostream>
 
 #define MIN_LINEAR_THRESHOLD 0.1f
@@ -104,4 +105,10 @@ void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec
 	//glm::vec2  force = normal * j;
 
 	//applyForceToActor(actor2, force);
+}
+
+float Rigidbody::getPotentialGravitationalEnergy(glm::vec2 gravity)
+{
+
+	{return (-(m_mass)*glm::dot(gravity, m_position)); }
 }

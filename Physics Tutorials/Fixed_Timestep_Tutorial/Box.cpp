@@ -33,6 +33,51 @@ void Box::CollideWithSphere(Sphere* pOther)
 {
 	glm::vec2 circlePos = pOther->getPosition() - m_position;
 	float w2 = m_width / 2, h2 = m_height / 2;
+
+	int numContacts = 0;
+	glm::vec2 contact(0, 0);		// contact is in our box coordinates
+
+
+	//////////////////////////////////////////////////////////////////////
+
+	// check the four corners to see if any of them are inside the circle
+	for (float x = -w2; x <= w2; x += m_width) 
+	{
+		for (float y = -h2; y <= h2; y += m_width)
+		{
+			glm::vec2 cornerPoint = x * m_localX + y * m_localY;
+			glm::vec2 distCorner2Circle = cornerPoint - circlePos;
+			if (distCorner2Circle.x * distCorner2Circle.x + distCorner2Circle.y * distCorner2Circle.y < pOther->getRadius() * pOther->getRadius())
+			{
+				numContacts++;
+				contact += glm::vec2(x, y);
+			}
+		}
+	}
+
+	/////////////////////////////////////////////////////////////////////
+
+	glm::vec2* direction = nullptr;
+	// get th4e local position of the circle cnetre
+	glm::vec2 localPos(glm::dot(m_localX, circlePos), glm::dot(m_localY, circlePos));
+	if (localPos.y < h2 && localPos.y > -h2)
+	{
+		if (localPos.x > 0 && localPos.x < w2 + pOther->getRadius())
+		{
+			numContacts++;
+			contact += glm::vec2(w2, localPos.y);
+			direction = new glm::vec2(m_localX);
+		}
+	}
+
+	if (numContacts > 0)
+	{
+		// average, and convert back into world coordinates
+		contact = m_position + (1.0f / numContacts) * (m_localX * contact.x + m_localY * contact.y);
+		resolveCollision(pOther, contact, direction);
+	}
+
+	delete direction;
 }
 
 void Box::CollideWithPlane(Plane* pOther)
@@ -46,12 +91,16 @@ void Box::CollideWithPlane(Plane* pOther)
 	glm::vec2 planeOrigin = pOther->getNormal() * pOther->getDistance();
 	float comFromPlane = glm::dot(m_position - planeOrigin, pOther->getNormal());
 
+
+
+	////////////////////////////////////////////////////////////////////
+
 	// check all four corners to see if we've hit the plane
 	for (float x = -m_extents.x; x < m_width; x += m_width)
 	{
 		for (float y = -m_extents.y; y < m_height; y += m_height)
 		{
-			// get the poisition of the corner in world space
+			// get the position of the corner in world space
 			glm::vec2 cornerPoint = m_position + x * m_localX + y * m_localY;
 
 			float distFromPlane = glm::dot(cornerPoint - planeOrigin, pOther->getNormal());
@@ -67,9 +116,11 @@ void Box::CollideWithPlane(Plane* pOther)
 				contact += cornerPoint;
 				contactV += velocityIntoPlane;
 			}
-
 		}
 	}
+
+	//////////////////////////////////////////////////////////////////
+
 
 	// we've had a hit - typically only two corners can contact
 	if (numContacts > 0)
@@ -101,6 +152,93 @@ void Box::CollideWithPlane(Plane* pOther)
 
 void Box::CollideWithBox(Box* pOther)
 {
+}
+
+bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal)
+{
+
+	float minX, maxX, minY, maxY;
+	
+	int numLocalContacts = 0;
+	glm::vec2 localContact(0, 0);
+
+	bool first = true;
+
+
+	/////////////////////////////////////////////////////////
+
+	for (float x = -m_extents.x; x < m_width; x += m_width)
+	{
+		for (float y = -m_extents.y; y < m_height; y += m_height)
+		{
+			// position in worldspace
+			glm::vec2 p = m_position + x * m_localX + y * m_localY;
+			// position in box's space
+			glm::vec2 p0(glm::dot(p - m_position, m_localX), glm::dot(p - m_position, m_localY));
+
+
+			// This part is used to set the maximum and minimum X and Y
+			if (first || p0.x < minX) minX = p0.x;
+			if (first || p0.x > maxX) maxX = p0.x;
+			if (first || p0.y < minY) minY = p0.y;
+			if (first || p0.y > maxY) maxY = p0.y;
+
+			if (p0.x >= -m_extents.x && p0.x <= m_extents.x && p0.y >= -m_extents.y && p0.y <= m_extents.y)
+			{
+				numLocalContacts ++ ;
+				localContact += p0;
+			}
+			first = false;
+		}
+	}
+
+	if (maxX < -m_extents.x || minX > m_extents.x || maxY < -m_extents.y || minY > m_extents.y)
+		return false;
+	if (numContacts == 0)
+		return false;
+
+	bool res = false;
+
+	contact += m_position + (localContact.x * m_localX + localContact.y * m_localY) / (float)numLocalContacts;
+	numContacts++;
+
+	float pen0 = m_extents.x = minX;
+
+	if (pen > 0 && (pen0 < pen || pen == 0))
+	{
+		edgeNormal = m_localX;
+		pen = pen0;
+		res = true;
+	}
+	pen0 = maxX + m_extents.x;
+	
+	if (pen > 0 && (pen0 < pen || pen == 0))
+	{
+		edgeNormal = -m_localX;
+		pen = pen0;
+		res = true;
+	}
+	pen0 = m_extents.y - minY;
+	
+	if (pen > 0 && (pen0 < pen || pen == 0))
+	{
+		edgeNormal = m_localY;
+		pen = pen0;
+		res = true;
+	}
+	pen0 = maxY + m_extents.y;
+	
+	if (pen > 0 && (pen0 < pen || pen == 0))
+	{
+		edgeNormal = -m_localY;
+		pen = pen0;
+		res = true;
+	}
+	return res;
+
+	///////////////////////////////////////////////////////
+
+	return false;
 }
 
 

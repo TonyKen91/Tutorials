@@ -1,5 +1,8 @@
 #pragma once
 #include "PhysicsObject.h"
+
+class PhysicsScene;
+
 class Rigidbody : public PhysicsObject
 {
 public:
@@ -19,7 +22,9 @@ public:
 	float getRotation() { return m_rotation; }
 	float getMass() { return m_mass; }
 
-	float getKineticEnergy() { return ((1 / 2)*m_mass* length(m_velocity)*length(m_velocity)); }
+	float getLinearKineticEnergy() { return ((1 / 2)*m_mass* length(m_velocity)*length(m_velocity)); }
+	float getRotationalKineticEnergy() { return ((1 / 2)*m_inertia * m_angularVelocity * m_angularVelocity); }
+	float getPotentialGravitationalEnergy(glm::vec2 gravity);
 
 	float getElasticity() { return m_elasticity; }
 
@@ -33,6 +38,8 @@ protected:
 	float m_angularDrag;
 	float m_angularVelocity;
 	float m_elasticity;
+
+	float m_gravity;
 
 	float m_inertia;
 
