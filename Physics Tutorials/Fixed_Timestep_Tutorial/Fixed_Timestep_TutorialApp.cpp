@@ -7,7 +7,14 @@
 #include "Input.h"
 
 Fixed_Timestep_TutorialApp::Fixed_Timestep_TutorialApp() {
+	// plans
 
+	// Finish all rotation tutorials
+	// Possibly implement two types of box collision detection which are circular edge detection and middle point resolution
+	// Energy calculation with potential energy set at 0
+	//		this is used to make sure that there are not energy gain every time you turn on and off gravity
+	// Pass in the length and width
+	// Make stages for the project
 }
 
 Fixed_Timestep_TutorialApp::~Fixed_Timestep_TutorialApp() {

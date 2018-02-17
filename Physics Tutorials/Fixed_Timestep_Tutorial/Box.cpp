@@ -152,6 +152,23 @@ void Box::CollideWithPlane(Plane* pOther)
 
 void Box::CollideWithBox(Box* pOther)
 {
+	glm::vec2 boxPos = pOther->m_position - m_position;
+
+	glm::vec2 norm(0, 0);
+	glm::vec2 contact(0, 0);
+	float pen = 0;
+	int numContacts = 0;
+
+	checkBoxCorners(*pOther, contact, numContacts, pen, norm);
+
+	if (pOther->checkBoxCorners(*this, contact, numContacts, pen, norm))
+	{
+		norm = -norm;
+	}
+	if (pen > 0)
+	{
+		resolveCollision(pOther, contact / float(numContacts), &norm);
+	}
 }
 
 bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal)
@@ -238,7 +255,6 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 
 	///////////////////////////////////////////////////////
 
-	return false;
 }
 
 
