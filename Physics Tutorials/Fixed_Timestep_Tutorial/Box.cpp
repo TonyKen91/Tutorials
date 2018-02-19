@@ -86,7 +86,6 @@ void Box::CollideWithPlane(Plane* pOther)
 	glm::vec2 contact(0, 0);
 	float contactV = 0;
 	float radius = 0.5f * std::fminf(m_width, m_height);
-	float penetration = 0;
 
 	// which side is the centre of mass on
 	glm::vec2 planeOrigin = pOther->getNormal() * pOther->getDistance();
@@ -110,23 +109,12 @@ void Box::CollideWithPlane(Plane* pOther)
 			float velocityIntoPlane = glm::dot(m_velocity + m_angularVelocity * (-y * m_localX + x * m_localY), pOther->getNormal());
 
 			// if this corner is on the opposite side from the COM, and moving further in, we need to resolve the collision
-			if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane >= 0) ||
-				(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane <= 0))
+			if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane > 0) ||
+				(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane < 0))
 			{
 				numContacts++;
 				contact += cornerPoint;
 				contactV += velocityIntoPlane;
-
-				if (comFromPlane >= 0)
-				{
-					if (penetration > distFromPlane)
-						penetration = distFromPlane;
-				}
-				else
-				{
-					if (penetration < distFromPlane)
-						penetration = distFromPlane;
-				}
 			}
 		}
 	}
@@ -159,8 +147,6 @@ void Box::CollideWithPlane(Plane* pOther)
 		// and apply the force
 		applyForce(acceleration * mass0, localContact);
 
-		m_position = m_position - pOther->getNormal() * penetration;
-
 	}
 }
 
@@ -185,18 +171,15 @@ void Box::CollideWithBox(Box* pOther)
 	}
 }
 
-bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal, glm::vec2& contactForce)
+bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal)
 {
-	float penetration = 0;
 
-	// This was part of rotation tutorial part 2
+	float minX, maxX, minY, maxY;
+	
+	int numLocalContacts = 0;
+	glm::vec2 localContact(0, 0);
 
-	//float minX, maxX, minY, maxY;
-	//
-	//int numLocalContacts = 0;
-	//glm::vec2 localContact(0, 0);
-
-	//bool first = true;
+	bool first = true;
 
 
 	/////////////////////////////////////////////////////////
@@ -210,40 +193,19 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 			// position in box's space
 			glm::vec2 p0(glm::dot(p - m_position, m_localX), glm::dot(p - m_position, m_localY));
 
-			if (p0.y < m_extents.y && p0.y > -m_extents.y)
+
+			// This part is used to set the maximum and minimum X and Y
+			if (first || p0.x < minX) minX = p0.x;
+			if (first || p0.x > maxX) maxX = p0.x;
+			if (first || p0.y < minY) minY = p0.y;
+			if (first || p0.y > maxY) maxY = p0.y;
+
+			if (p0.x >= -m_extents.x && p0.x <= m_extents.x && p0.y >= -m_extents.y && p0.y <= m_extents.y)
 			{
-				if (p0.x > 0 && p0.x < m_extents.x)
-				{
-					numContacts++;
-					contact += m_position + m_extents.x * m_localX + p0.y * m_localY;
-					edgeNormal = m_localX;
-					penetration = m_extents.x - p0.x;
-				}
-
-				if (p0.x > 0 && p0.x > -m_extents.x)
-				{
-					numContacts++;
-					contact += m_position - m_extents.x * m_localX + p0.y * m_localY;
-					edgeNormal = -m_localX;
-					penetration = m_extents.x - p0.x;
-				}
+				numLocalContacts ++ ;
+				localContact += p0;
 			}
-
-
-			// This was part of the old tutorial
-
-			//// This part is used to set the maximum and minimum X and Y
-			//if (first || p0.x < minX) minX = p0.x;
-			//if (first || p0.x > maxX) maxX = p0.x;
-			//if (first || p0.y < minY) minY = p0.y;
-			//if (first || p0.y > maxY) maxY = p0.y;
-
-			//if (p0.x >= -m_extents.x && p0.x <= m_extents.x && p0.y >= -m_extents.y && p0.y <= m_extents.y)
-			//{
-			//	numLocalContacts ++ ;
-			//	localContact += p0;
-			//}
-			//first = false;
+			first = false;
 		}
 	}
 

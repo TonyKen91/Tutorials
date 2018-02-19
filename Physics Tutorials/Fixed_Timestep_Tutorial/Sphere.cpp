@@ -38,14 +38,9 @@ bool Sphere::checkCollision(PhysicsObject * pOther)
 
 void Sphere::CollideWithSphere(Sphere * pOther)
 {
-	glm::vec2 delta = pOther->getPosition() - m_position;
-	float distance = glm::length(delta);
-	float intersection = m_radius + pOther->getRadius() - distance;
-	if (intersection > 0)
+	if ((m_radius + pOther->m_radius) > glm::distance(m_position, pOther->m_position))
 	{
-		glm::vec2 contactForce = 0.5f * (distance - (m_radius + pOther->getRadius())) * delta / distance;
 
-		// respond to the collision
 		resolveCollision(pOther, 0.5f * (m_position + pOther->getPosition()));
 	}
 
@@ -64,17 +59,11 @@ void Sphere::CollideWithPlane(Plane* pOther)
 		sphereToPlane *= -1;
 	}
 
-	float intersection = m_radius - sphereToPlane;
-	if (intersection > 0)
+	float interesection = m_radius - sphereToPlane;
+	if (interesection > 0)
 	{
 		glm::vec2 contact = m_position + (collisionNormal * -m_radius);
 		pOther->resolveCollision(this, contact);
-
-		// contact force
-		m_position += pOther->getNormal() * (m_radius - sphereToPlane);
-
-		//// contact force
-		//sphere->setPosition(sphere->getPosition() + plane->getNormal() * (sphere->getRadius() - sphereToPlane));
 	}
 }
 
