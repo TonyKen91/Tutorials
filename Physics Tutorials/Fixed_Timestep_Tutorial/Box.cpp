@@ -5,7 +5,7 @@
 
 
 
-Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass)
+Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 0.9f, 0.1)
 {
 	m_extents.x = width / 2;
 	m_extents.y = height / 2;
@@ -60,7 +60,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 	/////////////////////////////////////////////////////////////////////
 
 	glm::vec2* direction = nullptr;
-	// get th4e local position of the circle cnetre
+	// get the local position of the circle cnetre
 	glm::vec2 localPos(glm::dot(m_localX, circlePos), glm::dot(m_localY, circlePos));
 	if (localPos.y < h2 && localPos.y > -h2)
 	{
@@ -70,7 +70,30 @@ void Box::CollideWithSphere(Sphere* pOther)
 			contact += glm::vec2(w2, localPos.y);
 			direction = new glm::vec2(m_localX);
 		}
+		if (localPos.x < 0 && localPos.x < -(w2 + pOther->getRadius()))
+		{
+			numContacts++;
+			contact += glm::vec2(-w2, localPos.y);
+			direction = new glm::vec2(-m_localX);
+		}
 	}
+
+	if (localPos.x < w2 && localPos.x > -w2)
+	{
+		if (localPos.y > 0 && localPos.y < h2 + pOther->getRadius())
+		{
+			numContacts++;
+			contact += glm::vec2(localPos.x, h2);
+			direction = new glm::vec2(m_localY);
+		}
+		if (localPos.y < 0 && localPos.y < -(h2 + pOther->getRadius()))
+		{
+			numContacts++;
+			contact += glm::vec2(localPos.x, -h2);
+			direction = new glm::vec2(-m_localY);
+		}
+	}
+
 
 	if (numContacts > 0)
 	{

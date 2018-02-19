@@ -2,7 +2,7 @@
 #include "PhysicsScene.h"
 #include <iostream>
 
-#define MIN_LINEAR_THRESHOLD 0.1f
+#define MIN_LINEAR_THRESHOLD 0.01f
 #define MIN_ROTATION_THRESHOLD 0.01f
 
 Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float rotation, float mass, float elasticity, float linearDrag, float angularDrag) :
