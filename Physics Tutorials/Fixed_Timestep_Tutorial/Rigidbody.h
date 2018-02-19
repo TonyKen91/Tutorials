@@ -29,7 +29,7 @@ public:
 	float getElasticity() { return m_elasticity; }
 
 protected:
-	glm::vec2 m_position;
+	glm::vec2 m_position = { 0, 0 };
 	glm::vec2 m_velocity;
 	float m_rotation; // 2D so we only need a single float to represent our rotation
 	float m_mass;

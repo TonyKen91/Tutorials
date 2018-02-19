@@ -11,6 +11,7 @@ Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float
 	m_extents.y = height / 2;
 	m_width = width;
 	m_height = height;
+	m_colour = colour;
 }
 
 
@@ -272,8 +273,9 @@ void Box::draw()
 	glm::vec2 p3 = m_position + m_localX * m_extents.x - m_localY * m_extents.y;
 	glm::vec2 p4 = m_position - m_localX * m_extents.x - m_localY * m_extents.y;
 
-	aie::Gizmos::add2DTri(p1, p2, p3, m_colour);
-	aie::Gizmos::add2DTri(p3, p4, p1, m_colour);
+
+	aie::Gizmos::add2DTri(p1, p3, p2, m_colour);
+	aie::Gizmos::add2DTri(p3, p1, p4, m_colour);
 }
 
 bool Box::checkCollision(PhysicsObject * pOther)

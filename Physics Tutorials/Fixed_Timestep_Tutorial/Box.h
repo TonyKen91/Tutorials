@@ -26,16 +26,16 @@ public:
 	//virtual void CollideWithSphere(Sphere * sphere);
 
 protected:
-	float m_height;
-	float m_width;
+	float m_height = 0;
+	float m_width = 0;
 
-	glm::vec2 m_extents;
+	glm::vec2 m_extents = { 0 ,0 };
 
-	glm::vec4 m_colour;
+	glm::vec4 m_colour = { 0, 0, 0, 0 };
 
 	// store the local x, y axes of the box based on its angle of rotation
-	glm::vec2 m_localX;
-	glm::vec2 m_localY;
+	glm::vec2 m_localX = { 0, 0 };
+	glm::vec2 m_localY = { 0, 0 };
 
 };
 

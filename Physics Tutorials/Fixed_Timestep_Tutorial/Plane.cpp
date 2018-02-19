@@ -1,3 +1,4 @@
+#include "Box.h"
 #include "Plane.h"
 #include "Sphere.h"
 #include "Rigidbody.h"
@@ -82,4 +83,5 @@ void Plane::CollideWithPlane(Plane * pOther)
 
 void Plane::CollideWithBox(Box * pOther)
 {
+	pOther->CollideWithPlane(this);
 }
