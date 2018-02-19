@@ -22,8 +22,12 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 	//if (m_isKinematic)
 	//	return;
 
+	m_velocity += gravity * timeStep;
+
+
 	m_velocity *= (1 - m_linearDrag * timeStep);
-	m_angularVelocity *= (1 - m_angularDrag * timeStep);
+	m_rotation += m_angularVelocity * timeStep;
+	m_angularVelocity -= m_angularVelocity *m_angularDrag * timeStep;
 
 	if (length(m_velocity) < MIN_LINEAR_THRESHOLD)
 		m_velocity = glm::vec2(0, 0);
@@ -46,11 +50,11 @@ void Rigidbody::applyForce(glm::vec2 force, glm::vec2 pos)
 	m_angularVelocity += (force.y * pos.x - force.x * pos.y) / m_inertia; // This adds torque/moment x and y component to the angular velocity per frame
 }
 
-void Rigidbody::applyForceToActor(Rigidbody * actor2, glm::vec2 force)
-{
-	actor2->applyForce(force, glm::vec2(0, 0));
-	applyForce(-force, glm::vec2(0, 0));
-}
+//void Rigidbody::applyForceToActor(Rigidbody * actor2, glm::vec2 force)
+//{
+//	actor2->applyForce(force, glm::vec2(0, 0));
+//	applyForce(-force, glm::vec2(0, 0));
+//}
 
 void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec2* collisionNormal)
 {

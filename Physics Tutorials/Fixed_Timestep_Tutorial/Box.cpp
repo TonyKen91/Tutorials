@@ -12,6 +12,7 @@ Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float
 	m_width = width;
 	m_height = height;
 	m_colour = colour;
+	m_inertia = 1.0f / 12.0f * mass * width * height;
 }
 
 
@@ -266,8 +267,8 @@ void Box::draw()
 	// if only using rotation
 	// glm::mat4 transofrm = glm::rotate(m_rotation, glm::vec3(0, 0, 1));
 	// aie::Gizmos::add2DAABBFilled(getCenter(), m_extents, m_colour, &transform);
-
 	// draw using local axes
+
 	glm::vec2 p1 = m_position - m_localX * m_extents.x + m_localY * m_extents.y;
 	glm::vec2 p2 = m_position + m_localX * m_extents.x + m_localY * m_extents.y;
 	glm::vec2 p3 = m_position + m_localX * m_extents.x - m_localY * m_extents.y;

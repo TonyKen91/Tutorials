@@ -8,6 +8,7 @@ Sphere::Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius,
 	m_radius = radius;
 	m_colour = colour;
 	m_inertia = 0.5f * m_mass * m_radius * m_radius;
+	m_angularVelocity;
 }
 
 

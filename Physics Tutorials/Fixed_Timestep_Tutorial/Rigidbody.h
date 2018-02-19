@@ -12,7 +12,7 @@ public:
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
 	virtual void debug();
 	void applyForce(glm::vec2 force, glm::vec2 pos);
-	void applyForceToActor(Rigidbody* actor2, glm::vec2 force);
+	//void applyForceToActor(Rigidbody* actor2, glm::vec2 force);
 	void resolveCollision(Rigidbody* actor2, glm::vec2 contact, glm::vec2* collisionNormal = nullptr);
 
 	virtual bool checkCollision(PhysicsObject* pOther) = 0;
@@ -30,18 +30,18 @@ public:
 
 protected:
 	glm::vec2 m_position = { 0, 0 };
-	glm::vec2 m_velocity;
-	float m_rotation; // 2D so we only need a single float to represent our rotation
-	float m_mass;
+	glm::vec2 m_velocity = { 0, 0 };
+	float m_rotation = 0; // 2D so we only need a single float to represent our rotation
+	float m_mass = 0;
 
-	float m_linearDrag;
-	float m_angularDrag;
-	float m_angularVelocity;
-	float m_elasticity;
+	float m_linearDrag = 0;
+	float m_angularDrag = 0;
+	float m_angularVelocity = 0;
+	float m_elasticity = 1;
 
-	float m_gravity;
+	float m_gravity = 0;
 
-	float m_inertia;
+	float m_inertia = 1;
 
 	bool m_isKinematic = false;
 };
