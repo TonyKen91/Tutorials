@@ -28,6 +28,8 @@ public:
 
 	float getElasticity() { return m_elasticity; }
 
+	void setPosition(glm::vec2 position) { m_position = position; }
+
 protected:
 	glm::vec2 m_position = { 0, 0 };
 	glm::vec2 m_velocity = { 0, 0 };

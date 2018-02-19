@@ -5,7 +5,7 @@
 
 
 
-Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 0.9f, 0.1)
+Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 0.9f, 0.1f)
 {
 	m_extents.x = width / 2;
 	m_extents.y = height / 2;
@@ -99,6 +99,13 @@ void Box::CollideWithSphere(Sphere* pOther)
 	{
 		// average, and convert back into world coordinates
 		contact = m_position + (1.0f / numContacts) * (m_localX * contact.x + m_localY * contact.y);
+		//
+		//glm::vec2 delta = pOther->getPosition() - m_position;
+		//float distance = glm::length(delta);
+
+		//glm::vec2 contactForce = 0.5f * (distance - ((contact-m_position) + pOther->getRadius()))*delta / distance;
+		//m_position += contactForce;
+		//pOther->setPosition(pOther->getPosition() - contact);
 		resolveCollision(pOther, contact, direction);
 	}
 
@@ -197,6 +204,7 @@ void Box::CollideWithBox(Box* pOther)
 	float pen = 0;
 	int numContacts = 0;
 
+
 	checkBoxCorners(*pOther, contact, numContacts, pen, norm);
 
 	if (pOther->checkBoxCorners(*this, contact, numContacts, pen, norm))
@@ -206,6 +214,11 @@ void Box::CollideWithBox(Box* pOther)
 	if (pen > 0)
 	{
 		resolveCollision(pOther, contact / float(numContacts), &norm);
+
+		// apply contact forces
+		glm::vec2 displacement = pen * norm;
+		nudge(-displacement * 0.5f);
+		pOther->nudge(displacement * 0.5f);
 	}
 }
 
@@ -247,7 +260,7 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 		}
 	}
 
-	if (maxX < -m_extents.x || minX > m_extents.x || maxY < -m_extents.y || minY > m_extents.y)
+	if (maxX <= -m_extents.x || minX >= m_extents.x || maxY <= -m_extents.y || minY >= m_extents.y)
 		return false;
 	if (numContacts == 0)
 		return false;

@@ -4,7 +4,7 @@
 #include <iostream>
 
 Sphere::Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour) :
-	Rigidbody(SPHERE, position, velocity, 0, mass)
+	Rigidbody(SPHERE, position, velocity, 0, mass, 0.9f)
 {
 	m_radius = radius;
 	m_colour = colour;
