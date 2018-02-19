@@ -1,5 +1,6 @@
 #include "Sphere.h"
 #include "Plane.h"
+#include "Box.h"
 #include <iostream>
 
 Sphere::Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour) :
@@ -39,9 +40,17 @@ bool Sphere::checkCollision(PhysicsObject * pOther)
 
 void Sphere::CollideWithSphere(Sphere * pOther)
 {
-	if ((m_radius + pOther->m_radius) > glm::distance(m_position, pOther->m_position))
-	{
+	glm::vec2 delta = pOther->getPosition() - m_position;
+	float distance = glm::length(delta);
+	float intersection = m_radius + pOther->getRadius() - distance;
 
+	if (intersection > 0)
+	{
+		glm::vec2 contactForce = 0.5f * (distance - (m_radius + pOther->getRadius()))*delta / distance;
+		m_position += contactForce;
+		pOther->m_position -= contactForce;
+
+		// respond to the collision
 		resolveCollision(pOther, 0.5f * (m_position + pOther->getPosition()));
 	}
 
@@ -60,14 +69,18 @@ void Sphere::CollideWithPlane(Plane* pOther)
 		sphereToPlane *= -1;
 	}
 
-	float interesection = m_radius - sphereToPlane;
-	if (interesection > 0)
+	float intersection = m_radius - sphereToPlane;
+	if (intersection > 0)
 	{
 		glm::vec2 contact = m_position + (collisionNormal * -m_radius);
 		pOther->resolveCollision(this, contact);
+
+		// contact force
+		m_position += collisionNormal * (m_radius - sphereToPlane);
 	}
 }
 
 void Sphere::CollideWithBox(Box * pOther)
 {
+	pOther->CollideWithSphere(this);
 }

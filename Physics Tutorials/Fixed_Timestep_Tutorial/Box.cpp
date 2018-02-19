@@ -88,6 +88,7 @@ void Box::CollideWithPlane(Plane* pOther)
 	glm::vec2 contact(0, 0);
 	float contactV = 0;
 	float radius = 0.5f * std::fminf(m_width, m_height);
+	float penetration = 0;
 
 	// which side is the centre of mass on
 	glm::vec2 planeOrigin = pOther->getNormal() * pOther->getDistance();
@@ -111,12 +112,23 @@ void Box::CollideWithPlane(Plane* pOther)
 			float velocityIntoPlane = glm::dot(m_velocity + m_angularVelocity * (-y * m_localX + x * m_localY), pOther->getNormal());
 
 			// if this corner is on the opposite side from the COM, and moving further in, we need to resolve the collision
-			if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane > 0) ||
-				(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane < 0))
+			if ((distFromPlane > 0 && comFromPlane < 0 && velocityIntoPlane >= 0) ||
+				(distFromPlane < 0 && comFromPlane > 0 && velocityIntoPlane <= 0))
 			{
 				numContacts++;
 				contact += cornerPoint;
 				contactV += velocityIntoPlane;
+
+				if (comFromPlane >= 0)
+				{
+					if (penetration > distFromPlane)
+						penetration = distFromPlane;
+				}
+				else
+				{
+					if (penetration < distFromPlane)
+						penetration = distFromPlane;
+				}
 			}
 		}
 	}
@@ -149,6 +161,7 @@ void Box::CollideWithPlane(Plane* pOther)
 		// and apply the force
 		applyForce(acceleration * mass0, localContact);
 
+		m_position -= pOther->getNormal() * penetration;
 	}
 }
 
