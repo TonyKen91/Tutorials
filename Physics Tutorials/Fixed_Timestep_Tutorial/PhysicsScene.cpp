@@ -37,9 +37,11 @@ void PhysicsScene::update(float dt)
 
 	while (accumulatedTime >= m_timeStep)
 	{
+		totalEnergy = 0;
 		for (auto pActor : m_actors)
 		{
 			pActor->fixedUpdate(m_gravity, m_timeStep);
+			totalEnergy += pActor->getTotalEnergy();
 		}
 		accumulatedTime -= m_timeStep;
 
@@ -168,21 +170,25 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
 
 bool PhysicsScene::sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 {
+	std::cout << "Not suppose to be here" << std::endl;
 	return false;
 }
 
 bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 {
+	std::cout << "Not suppose to be here" << std::endl;
 	return false;
 }
 
 bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 {
+	std::cout << "Not suppose to be here" << std::endl;
 	return false;
 }
 
 bool PhysicsScene::box2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 {
+	std::cout << "Not suppose to be here" << std::endl;
 	return false;
 }
 

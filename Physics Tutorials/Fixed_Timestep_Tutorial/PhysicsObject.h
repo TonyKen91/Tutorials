@@ -26,6 +26,8 @@ public:
 	virtual void debug() = 0;
 	virtual void draw() = 0;
 	virtual void resetPosition() {};
+	virtual float getTotalEnergy() = 0;
+
 
 	virtual void CollideWithSphere(Sphere* pOther) = 0;
 	virtual void CollideWithPlane(Plane* pOther) = 0;

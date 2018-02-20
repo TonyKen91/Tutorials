@@ -30,6 +30,8 @@ public:
 
 	void setPosition(glm::vec2 position) { m_position = position; }
 
+	float getTotalEnergy();
+
 protected:
 	glm::vec2 m_position = { 0, 0 };
 	glm::vec2 m_velocity = { 0, 0 };

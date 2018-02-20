@@ -30,4 +30,5 @@ protected:
 	aie::Font*			m_font;
 
 	PhysicsScene* m_physicsScene;
+	float				m_totalEnergy = 0;
 };

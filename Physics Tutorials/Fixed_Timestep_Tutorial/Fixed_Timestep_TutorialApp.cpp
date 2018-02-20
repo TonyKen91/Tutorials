@@ -31,38 +31,42 @@ bool Fixed_Timestep_TutorialApp::startup() {
 
 	// TODO: remember to change this when redistributing a build!
 	// the following path would be used instead: "./font/consolas.ttf"
-	m_font = new aie::Font("../bin/font/consolas.ttf", 32);
+	m_font = new aie::Font("../bin/font/consolas.ttf", 15);
 
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec2(0, -10));
+	m_physicsScene->setGravity(vec2(0, 0));
 	m_physicsScene->setTimeStep(0.001f);
 
-	//Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 2.0f, 2, vec4(1, 0, 0, 1));
-	//Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 0, 1));
-	//Sphere* ball3 = new Sphere(vec2(0, 15), vec2(0, 0), 2.0f, 2, vec4(1, 1, 0, 1));
-	//Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 1, 1));
-	//
-	//Sphere* ball5 = new Sphere(vec2(0, 10), vec2(0, 0), 2.0f, 4, vec4(0.2f, 0.7f, 0.7f, 1));
-	//Sphere* ball6 = new Sphere(vec2(0, 20), vec2(0, 0), 2.0f, 4, vec4(0, 0.5f, 0.5f, 1));
-	Box* box1 = new Box(vec2(0, -40), vec2(0, 0), 1.0f, 10.0f, 10.0f, vec4(1, 0, 1, 1));
-	Box* box2 = new Box(vec2(1, -40), vec2(0, 50), 1.0f, 10.0f, 10.0f, vec4(0.5f, 0.5f, 1, 1));
-	//Box* box3 = new Box(vec2(-20, -20), vec2(15, 11), 1.0f, 2.0f, 2.0f, vec4(0.5f, 0.5f, 1, 1));
-	//Box* box4 = new Box(vec2(20, -20), vec2(10, 0), 1.0f, 2.0f, 2.0f, vec4(0.8f, 0.5f, 0.2f, 1));
+	Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 30), 2.0f, 2, vec4(1, 0, 0, 1));
+	Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 0, 1));
+	Sphere* ball3 = new Sphere(vec2(0, 15), vec2(0, 0), 2.0f, 2, vec4(1, 1, 0, 1));
+	Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 1, 1));
+	
+	Sphere* ball5 = new Sphere(vec2(0, 10), vec2(0, 0), 2.0f, 4, vec4(0.2f, 0.7f, 0.7f, 1));
+	Sphere* ball6 = new Sphere(vec2(0, 20), vec2(0, 0), 2.0f, 4, vec4(0.5f, 0.1f, 0.5f, 1));
+	
+	Box* box1 = new Box(vec2(0, 0), vec2(0, -200), 10.0f, 10.0f, 10.0f, vec4(1, 0, 1, 1));
+	Box* box2 = new Box(vec2(5, -40), vec2(2, 100), 10.0f, 10.0f, 10.0f, vec4(0.5f, 0.5f, 1, 1));
+	Box* box3 = new Box(vec2(-20, -20), vec2(15, 11), 2.0f, 2.0f, 2.0f, vec4(0.5f, 0.5f, 1, 1));
+	Box* box4 = new Box(vec2(20, -20), vec2(10, 15), 2.0f, 2.0f, 2.0f, vec4(0.8f, 0.5f, 0.2f, 1));
+	Box* box5 = new Box(vec2(5, -40), vec2(0, 23), 13.0f, 13.0f, 13.0f, vec4(0.5f, 0.5f, 1, 1));
 
-	//m_physicsScene->addActor(ball1);
-	//m_physicsScene->addActor(ball2);
-	//m_physicsScene->addActor(ball3);
-	//m_physicsScene->addActor(ball4);
+	m_physicsScene->addActor(ball1);
+	m_physicsScene->addActor(ball2);
+	m_physicsScene->addActor(ball3);
+	m_physicsScene->addActor(ball4);
 
-	//m_physicsScene->addActor(ball5);
-	//m_physicsScene->addActor(ball6);
+	m_physicsScene->addActor(ball5);
+	m_physicsScene->addActor(ball6);
+	
 	m_physicsScene->addActor(box1);
 	m_physicsScene->addActor(box2);
-	//m_physicsScene->addActor(box3);
-	//m_physicsScene->addActor(box4);
+	m_physicsScene->addActor(box3);
+	m_physicsScene->addActor(box4);
+	//m_physicsScene->addActor(box5);
 
-	//ball1->applyForce(vec2(100, -10), vec2(0, 0));
-	//ball2->applyForce(vec2(-100, -10), vec2(0, 0));
+	ball1->applyForce(vec2(100, -10), vec2(0, 0));
+	ball2->applyForce(vec2(-100, -10), vec2(0, 0));
 
 
 	Plane* plane1 = new Plane(glm::vec2(0, 1), -50);
@@ -98,6 +102,7 @@ void Fixed_Timestep_TutorialApp::update(float deltaTime) {
 
 	m_physicsScene->update(deltaTime);
 	m_physicsScene->updateGizmos();
+	m_totalEnergy = m_physicsScene->totalEnergy;
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
@@ -118,6 +123,12 @@ void Fixed_Timestep_TutorialApp::draw() {
 	
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+
+
+	char energy[32];
+	sprintf_s(energy, 32, "Total Energy: %f", m_totalEnergy);
+	m_2dRenderer->drawText(m_font, energy, 0, 20);
+
 
 	// done drawing sprites
 	m_2dRenderer->end();

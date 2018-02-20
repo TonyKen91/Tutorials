@@ -41,6 +41,9 @@ public:
 	static bool box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool box2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 
+	float totalEnergy;
+
+
 protected:
 
 	glm::vec2 m_gravity;

@@ -116,3 +116,8 @@ float Rigidbody::getPotentialGravitationalEnergy(glm::vec2 gravity)
 
 	{return (-(m_mass)*glm::dot(gravity, m_position)); }
 }
+
+float Rigidbody::getTotalEnergy()
+{
+	return getLinearKineticEnergy() + getRotationalKineticEnergy();
+}
