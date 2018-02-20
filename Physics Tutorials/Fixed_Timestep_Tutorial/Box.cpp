@@ -225,12 +225,17 @@ void Box::CollideWithBox(Box* pOther)
 bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal)
 {
 
-	float minX, maxX, minY, maxY;
+	float minX;
+	float maxX;
+	float minY;
+	float maxY;
 	
 	int numLocalContacts = 0;
 	glm::vec2 localContact(0, 0);
 
 	bool first = true;
+
+	float penetration = 0;
 
 
 	/////////////////////////////////////////////////////////
@@ -242,14 +247,60 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 			// position in worldspace
 			glm::vec2 p = m_position + x * m_localX + y * m_localY;
 			// position in box's space
-			glm::vec2 p0(glm::dot(p - m_position, m_localX), glm::dot(p - m_position, m_localY));
+			glm::vec2 localPos(glm::dot(p - m_position, m_localX), glm::dot(p - m_position, m_localY));
 
+			float w2 = m_width / 2, h2 = m_height / 2;
+
+			if (localPos.y < h2 && localPos.y > -h2)
+			{
+				if (localPos.x > 0 && localPos.x < w2)
+				{
+					numContacts++;
+					contact += m_position + w2 * m_localX + localPos.y * m_localY;
+					edgeNormal = m_localX;
+					penetration = w2 - localPos.x;
+				}
+				if (localPos.x < 0 && localPos.x < -w2)
+				{
+					numContacts++;
+					contact += m_position - w2 * m_localX + localPos.y * m_localY;
+					edgeNormal = -m_localX;
+					penetration = w2 + localPos.x;
+				}
+			}
+
+			if (localPos.x < w2 && localPos.x > -w2)
+			{
+				if (localPos.y > 0 && localPos.y < h2)
+				{
+					numContacts++;
+					contact += m_position + localPos.x * m_localX + h2 * m_localY;
+					float pen0 = h2 - localPos.y;
+					if (pen0 < penetration || penetration == 0)
+					{
+						penetration = pen0;
+						edgeNormal = m_localY;
+					}
+				}
+				if (localPos.y < 0 && localPos.y < -h2)
+				{
+					numContacts++;
+					contact += m_position + localPos.x * m_localX - h2 * m_localY;
+					float pen0 = h2 + localPos.y;
+					if (pen0 < penetration || penetration == 0)
+					{
+						penetration = pen0;
+						edgeNormal = -m_localY;
+					}
+				}
+			}
+			// This is part of rotation tutorial part 2
 
 			// This part is used to set the maximum and minimum X and Y
-			if (first || p0.x < minX) minX = p0.x;
-			if (first || p0.x > maxX) maxX = p0.x;
-			if (first || p0.y < minY) minY = p0.y;
-			if (first || p0.y > maxY) maxY = p0.y;
+			if (first || localPos.x < minX) minX = localPos.x;
+			if (first || localPos.x > maxX) maxX = localPos.x;
+			if (first || localPos.y < minY) minY = localPos.y;
+			if (first || localPos.y > maxY) maxY = localPos.y;
 
 			if (p0.x >= -m_extents.x && p0.x <= m_extents.x && p0.y >= -m_extents.y && p0.y <= m_extents.y)
 			{
