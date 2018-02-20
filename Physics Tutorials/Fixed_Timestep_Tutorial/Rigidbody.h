@@ -22,15 +22,15 @@ public:
 	float getRotation() { return m_rotation; }
 	float getMass() { return m_mass; }
 
-	float getLinearKineticEnergy() { return ((1 / 2)*m_mass* length(m_velocity)*length(m_velocity)); }
-	float getRotationalKineticEnergy() { return ((1 / 2)*m_inertia * m_angularVelocity * m_angularVelocity); }
+	float getLinearKineticEnergy() { return ((0.5f)*m_mass* length(m_velocity)*length(m_velocity)); }
+	float getRotationalKineticEnergy() { return ((0.5f)*m_inertia * m_angularVelocity * m_angularVelocity); }
 	float getPotentialGravitationalEnergy(glm::vec2 gravity);
 
 	float getElasticity() { return m_elasticity; }
 
 	void setPosition(glm::vec2 position) { m_position = position; }
 
-	float getTotalEnergy();
+	virtual float getTotalEnergy();
 
 protected:
 	glm::vec2 m_position = { 0, 0 };

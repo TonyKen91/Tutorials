@@ -126,7 +126,7 @@ void Fixed_Timestep_TutorialApp::draw() {
 
 
 	char energy[32];
-	sprintf_s(energy, 32, "Total Energy: %f", m_totalEnergy);
+	sprintf_s(energy, 32, "Total Energy: %f", m_physicsScene->totalEnergy);
 	m_2dRenderer->drawText(m_font, energy, 0, 20);
 
 
