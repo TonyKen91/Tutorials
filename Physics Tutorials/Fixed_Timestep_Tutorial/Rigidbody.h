@@ -17,6 +17,8 @@ public:
 
 	virtual bool checkCollision(PhysicsObject* pOther) = 0;
 
+	glm::vec2 toWorld(glm::vec2 contact);
+
 	glm::vec2 getPosition() { return m_position; }
 	glm::vec2 getVelocity() { return m_velocity; }
 	float getRotation() { return m_rotation; }
@@ -51,5 +53,12 @@ protected:
 	float m_inertia = 1;
 
 	bool m_isKinematic;
+
+
+
+	// store the local x, y axes of the rigidbody based on its angle of rotation
+	glm::vec2 m_localX = { 0, 0 };
+	glm::vec2 m_localY = { 0, 0 };
+
 };
 

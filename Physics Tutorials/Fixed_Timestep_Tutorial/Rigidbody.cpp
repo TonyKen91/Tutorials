@@ -116,6 +116,17 @@ void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec
 	//applyForceToActor(actor2, force);
 }
 
+glm::vec2 Rigidbody::toWorld(glm::vec2 contact)
+{
+	// This function is used to convert from local to world coordinates
+	// This can be done by either using the m_localX and m_localY
+	// or calculate it using the objects rotation variable
+	// or use a translation matrix and multiply your local coordinate by this matrix
+
+	// This is using the m_localX and m_localY
+	return m_position + m_localX * contact.x + m_localY * contact.y;
+}
+
 float Rigidbody::getPotentialGravitationalEnergy(glm::vec2 gravity)
 {
 

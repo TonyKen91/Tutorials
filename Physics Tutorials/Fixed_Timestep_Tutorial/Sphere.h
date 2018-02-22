@@ -12,6 +12,8 @@ public:
 	float getRadius() { return m_radius; }
 	glm::vec4 getColour() { return m_colour; }
 
+	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
+
 	virtual void Collide(PhysicsObject* obj) { obj->CollideWithSphere(this); }
 
 	virtual void CollideWithSphere(Sphere* pOther);

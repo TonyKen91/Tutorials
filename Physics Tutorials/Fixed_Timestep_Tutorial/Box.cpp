@@ -5,7 +5,7 @@
 
 
 
-Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 0.5f, 0.1f, 0.1f)
+Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 1, 0, 0)
 {
 	m_extents.x = width / 2;
 	m_extents.y = height / 2;
