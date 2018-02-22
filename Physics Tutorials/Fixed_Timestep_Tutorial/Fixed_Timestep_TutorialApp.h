@@ -8,6 +8,7 @@
 #include "Sphere.h"
 #include "Plane.h"
 #include "Box.h"
+#include "Spring.h"
 
 using glm::vec2;
 using glm::vec4;

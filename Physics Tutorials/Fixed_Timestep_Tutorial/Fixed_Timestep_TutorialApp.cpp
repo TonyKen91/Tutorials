@@ -52,6 +52,8 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	Box* box5 = new Box(vec2(5, -40), vec2(0, 23), 13.0f, 13.0f, 13.0f, vec4(0.5f, 0.5f, 1, 1));
 
 
+	Spring* spring1 = new Spring(ball1, ball2, 2, 1);
+
 	ball1->setKinematic(true);
 	box2->setKinematic(true);
 
@@ -68,6 +70,9 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	//m_physicsScene->addActor(box3);
 	//m_physicsScene->addActor(box4);
 	//m_physicsScene->addActor(box5);
+
+	m_physicsScene->addActor(spring1);
+
 
 	//ball1->applyForce(vec2(100, -10), vec2(0, 0));
 	//ball2->applyForce(vec2(-100, -10), vec2(0, 0));

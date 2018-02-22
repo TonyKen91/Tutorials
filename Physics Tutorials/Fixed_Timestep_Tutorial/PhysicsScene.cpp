@@ -114,11 +114,15 @@ void PhysicsScene::checkForCollision()
 		{
 			PhysicsObject* object2 = *it2;
 
-			object1->Collide(object2);
-
 			if (object1->getShapeID() < 0 || object2->getShapeID() < 0)
 				continue;
-	
+
+			// I think this handles the collision between objects with a joint but we'll see
+			// Might need to add collision handling between objects connected with joints
+
+
+			object1->Collide(object2);
+
 			//int shapeId1 = object1->getShapeID();
 			//int shapeId2 = object2->getShapeID();
 
