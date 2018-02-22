@@ -34,16 +34,16 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	m_font = new aie::Font("../bin/font/consolas.ttf", 15);
 
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec2(0, 0));
+	m_physicsScene->setGravity(vec2(0, -10));
 	m_physicsScene->setTimeStep(0.001f);
 
-	Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 30), 2.0f, 2, vec4(1, 0, 0, 1));
+	Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 2.0f, 2, vec4(1, 0, 0, 1));
 	Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 0, 1));
 	Sphere* ball3 = new Sphere(vec2(0, 15), vec2(0, 0), 2.0f, 2, vec4(1, 1, 0, 1));
 	Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 1, 1));
 	
-	Sphere* ball5 = new Sphere(vec2(0, 10), vec2(0, 0), 2.0f, 4, vec4(0.2f, 0.7f, 0.7f, 1));
-	Sphere* ball6 = new Sphere(vec2(0, 20), vec2(0, 0), 2.0f, 4, vec4(0.5f, 0.1f, 0.5f, 1));
+	Sphere* ball5 = new Sphere(vec2(0, 10), vec2(0, -200), 2.0f, 4, vec4(0.2f, 0.7f, 0.7f, 1));
+	Sphere* ball6 = new Sphere(vec2(0, 20), vec2(0, 100), 2.0f, 4, vec4(0.5f, 0.1f, 0.5f, 1));
 	
 	Box* box1 = new Box(vec2(0, 0), vec2(0, -200), 10.0f, 10.0f, 10.0f, vec4(1, 0, 1, 1));
 	Box* box2 = new Box(vec2(5, -40), vec2(2, 100), 10.0f, 10.0f, 10.0f, vec4(0.5f, 0.5f, 1, 1));
@@ -51,22 +51,26 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	Box* box4 = new Box(vec2(20, -20), vec2(10, 15), 2.0f, 2.0f, 2.0f, vec4(0.8f, 0.5f, 0.2f, 1));
 	Box* box5 = new Box(vec2(5, -40), vec2(0, 23), 13.0f, 13.0f, 13.0f, vec4(0.5f, 0.5f, 1, 1));
 
+
+	ball1->setKinematic(true);
+	box2->setKinematic(true);
+
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
-	m_physicsScene->addActor(ball3);
-	m_physicsScene->addActor(ball4);
+	//m_physicsScene->addActor(ball3);
+	//m_physicsScene->addActor(ball4);
 
-	m_physicsScene->addActor(ball5);
-	m_physicsScene->addActor(ball6);
-	
-	m_physicsScene->addActor(box1);
-	m_physicsScene->addActor(box2);
-	m_physicsScene->addActor(box3);
-	m_physicsScene->addActor(box4);
+	//m_physicsScene->addActor(ball5);
+	//m_physicsScene->addActor(ball6);
+	//
+	//m_physicsScene->addActor(box1);
+	//m_physicsScene->addActor(box2);
+	//m_physicsScene->addActor(box3);
+	//m_physicsScene->addActor(box4);
 	//m_physicsScene->addActor(box5);
 
-	ball1->applyForce(vec2(100, -10), vec2(0, 0));
-	ball2->applyForce(vec2(-100, -10), vec2(0, 0));
+	//ball1->applyForce(vec2(100, -10), vec2(0, 0));
+	//ball2->applyForce(vec2(-100, -10), vec2(0, 0));
 
 
 	Plane* plane1 = new Plane(glm::vec2(0, 1), -50);

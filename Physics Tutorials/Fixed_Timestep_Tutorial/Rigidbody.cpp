@@ -2,13 +2,14 @@
 #include "PhysicsScene.h"
 #include <iostream>
 
-#define MIN_LINEAR_THRESHOLD 0.01f
+#define MIN_LINEAR_THRESHOLD 0.1f
 #define MIN_ROTATION_THRESHOLD 0.01f
 
 Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float rotation, float mass, float elasticity, float linearDrag, float angularDrag) :
 	PhysicsObject(shapeID), m_position (position), m_velocity (velocity), m_rotation(rotation), m_mass(mass), m_elasticity(elasticity), m_linearDrag(linearDrag), m_angularDrag(angularDrag)
 {
 	m_angularVelocity = 0;
+	m_isKinematic = false;
 }
 
 
@@ -19,8 +20,11 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
-	//if (m_isKinematic)
-	//	return;
+	if (m_isKinematic)
+	{
+		return;
+	}
+
 
 	m_velocity += gravity * timeStep;
 
@@ -30,7 +34,8 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 	m_angularVelocity -= m_angularVelocity *m_angularDrag * timeStep;
 
 	if (length(m_velocity) < MIN_LINEAR_THRESHOLD)
-		m_velocity = glm::vec2(0, 0);
+		if (length(m_velocity) < length(gravity)*m_linearDrag*timeStep)
+			m_velocity = glm::vec2(0, 0);
 	if (abs(m_angularVelocity) < MIN_ROTATION_THRESHOLD)
 		m_angularVelocity = 0;
 

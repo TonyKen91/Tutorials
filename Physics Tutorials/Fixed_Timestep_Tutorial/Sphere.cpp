@@ -46,9 +46,23 @@ void Sphere::CollideWithSphere(Sphere * pOther)
 
 	if (intersection > 0)
 	{
+
 		glm::vec2 contactForce = 0.5f * (distance - (m_radius + pOther->getRadius()))*delta / distance;
-		m_position += contactForce;
-		pOther->m_position -= contactForce;
+		//m_position += contactForce;
+		//pOther->m_position -= contactForce;
+
+		// move each shape away in the direction of penetration
+		if (!m_isKinematic && !pOther->isKinematic())
+		{
+			m_position += contactForce;
+			pOther->m_position -= contactForce;
+		}
+		else if (!m_isKinematic)
+			m_position += contactForce * 2.0f;
+		else
+			pOther->m_position -= contactForce * 2.0f;
+
+
 
 		// respond to the collision
 		resolveCollision(pOther, 0.5f * (m_position + pOther->getPosition()));

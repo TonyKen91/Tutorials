@@ -5,7 +5,7 @@
 
 
 
-Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 1, 0, 0)
+Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 0.5f, 0.1f, 0.1f)
 {
 	m_extents.x = width / 2;
 	m_extents.y = height / 2;
@@ -99,6 +99,23 @@ void Box::CollideWithSphere(Sphere* pOther)
 	{
 		// average, and convert back into world coordinates
 		contact = m_position + (1.0f / numContacts) * (m_localX * contact.x + m_localY * contact.y);
+
+		// with the contact point we can find a penetration vector
+		float pen = pOther->getRadius() - glm::length(contact - pOther->getPosition());
+
+		glm::vec2 penVec = glm::normalize(contact - pOther->getPosition()) * pen;
+
+		// move each shape away in the direction of penetration
+		if (!m_isKinematic && !pOther->isKinematic())
+		{
+			m_position += penVec * 0.5f;
+			pOther->setPosition(pOther->getPosition() - penVec * 0.5f);
+		}
+		else if (!m_isKinematic)
+			m_position += penVec;
+		else
+			pOther->setPosition(pOther->getPosition() - penVec);
+
 		//
 		//glm::vec2 delta = pOther->getPosition() - m_position;
 		//float distance = glm::length(delta);
@@ -214,12 +231,27 @@ void Box::CollideWithBox(Box* pOther)
 
 	if (pen > 0)
 	{
+		// apply contact forces
+		glm::vec2 displacement = pen * norm;
+
+		// move each shape away in the direction of penetration
+		if (!m_isKinematic && !pOther->isKinematic())
+		{
+			nudge(-displacement * 0.5f);
+			pOther->nudge(displacement * 0.5f);
+		}
+		else if (!m_isKinematic)
+			nudge(-displacement);
+		else
+			pOther->nudge(displacement);
+
+
 		resolveCollision(pOther, contact / float(numContacts), &norm);
 
 		// apply contact forces
-		glm::vec2 displacement = pen * norm;
-		nudge(-displacement * 0.5f);
-		pOther->nudge(displacement * 0.5f);
+		//glm::vec2 displacement = pen * norm;
+		//nudge(-displacement * 0.5f);
+		//pOther->nudge(displacement * 0.5f);
 	}
 }
 
