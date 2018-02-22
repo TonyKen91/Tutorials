@@ -2,10 +2,9 @@
 #include "Rigidbody.h"
 
 
-Spring::Spring() : PhysicsObject(m_shapeID)
+Spring::Spring(Rigidbody * body1, Rigidbody * body2, float restLength, float springCoefficient, float damping, glm::vec2 contact1, glm::vec2 contact2) : PhysicsObject(ShapeType::JOINT)
 {
 }
-
 
 Spring::~Spring()
 {
@@ -31,6 +30,7 @@ void Spring::fixedUpdate(glm::vec2 gravity, float timeStep)
 
 void Spring::draw()
 {
+	aie::Gizmos::add2DLine(m_body1->getPosition(), m_body2->getPosition(), glm::vec4(1, 1, 1, 1));
 }
 
 float Spring::getTotalEnergy()

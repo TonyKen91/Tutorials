@@ -10,11 +10,13 @@ class Plane;
 class Box;
 
 enum ShapeType {
+	JOINT = -1,
 	PLANE = 0,
 	SPHERE,
 	BOX,
-	SHAPE_COUNT
 };
+
+const int 	SHAPE_COUNT = 3;
 
 class PhysicsObject
 {
