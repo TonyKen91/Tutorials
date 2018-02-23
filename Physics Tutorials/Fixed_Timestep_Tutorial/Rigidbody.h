@@ -24,7 +24,7 @@ public:
 	float getRotation() { return m_rotation; }
 	float getMass() { return (m_isKinematic) ? INT_MAX : m_mass; }
 
-	float getLinearKineticEnergy() { return ((0.5f)*m_mass* length(m_velocity)*length(m_velocity)); }
+	float getLinearKineticEnergy() { return ((0.5f)*m_mass* glm::dot(m_velocity, m_velocity)); }
 	float getRotationalKineticEnergy() { return ((0.5f)*m_inertia * m_angularVelocity * m_angularVelocity); }
 	float getPotentialGravitationalEnergy(glm::vec2 gravity);
 

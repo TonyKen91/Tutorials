@@ -34,7 +34,7 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	m_font = new aie::Font("../bin/font/consolas.ttf", 15);
 
 	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec2(0, -10));
+	m_physicsScene->setGravity(vec2(0, 0));
 	m_physicsScene->setTimeStep(0.001f);
 
 	Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 2.0f, 2, vec4(1, 0, 0, 1));
@@ -52,14 +52,15 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	Box* box5 = new Box(vec2(5, -40), vec2(0, 23), 13.0f, 13.0f, 13.0f, vec4(0.5f, 0.5f, 1, 1));
 
 
-	Spring* spring1 = new Spring(ball1, ball2, 2, 1);
+	Spring* spring1 = new Spring(ball1, ball2, 30, 1);
+	Spring* spring2 = new Spring(ball2, ball3, 30, 1);
 
 	ball1->setKinematic(true);
 	box2->setKinematic(true);
 
 	m_physicsScene->addActor(ball1);
 	m_physicsScene->addActor(ball2);
-	//m_physicsScene->addActor(ball3);
+	m_physicsScene->addActor(ball3);
 	//m_physicsScene->addActor(ball4);
 
 	//m_physicsScene->addActor(ball5);
@@ -71,7 +72,8 @@ bool Fixed_Timestep_TutorialApp::startup() {
 	//m_physicsScene->addActor(box4);
 	//m_physicsScene->addActor(box5);
 
-	m_physicsScene->addActor(spring1);
+	//m_physicsScene->addActor(spring1);
+	//m_physicsScene->addActor(spring2);
 
 
 	//ball1->applyForce(vec2(100, -10), vec2(0, 0));
@@ -137,7 +139,6 @@ void Fixed_Timestep_TutorialApp::draw() {
 	char energy[32];
 	sprintf_s(energy, 32, "Total Energy: %f", m_physicsScene->totalEnergy);
 	m_2dRenderer->drawText(m_font, energy, 0, 20);
-
 
 	// done drawing sprites
 	m_2dRenderer->end();
