@@ -242,7 +242,7 @@ void Box::CollideWithBox(Box* pOther)
 		}
 		else if (!m_isKinematic)
 			nudge(-displacement);
-		else
+		else if (!pOther->isKinematic())
 			pOther->nudge(displacement);
 
 
@@ -355,7 +355,7 @@ void Box::draw()
 	glm::vec2 p4 = m_position - m_localX * m_extents.x - m_localY * m_extents.y;
 
 
-	aie::Gizmos::add2DTri(p1, p3, p2, glm::vec4(1, 1, 1, 1));
+	aie::Gizmos::add2DTri(p1, p3, p2, m_colour/*glm::vec4(1, 1, 1, 1)*/);
 	aie::Gizmos::add2DTri(p3, p1, p4, m_colour);
 }
 
