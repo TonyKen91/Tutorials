@@ -3,7 +3,8 @@
 class Sphere : public Rigidbody
 {
 public:
-	Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour);
+	Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour,
+		float rotation = 0, float elasticity = 1, float linearDrag = 0.01f, float angularDrag = 0.01f);
 	~Sphere();
 
 	virtual void draw();
@@ -19,6 +20,7 @@ public:
 	virtual void CollideWithSphere(Sphere* pOther);
 	virtual void CollideWithPlane(Plane* pOther);
 	virtual void CollideWithBox(Box* pOther);
+
 
 	//virtual void CollideWithObj(PhysicsObject* obj) { obj->CollideWithSphere(this); }
 	//virtual void CollideWithSphere(Sphere * sphere);

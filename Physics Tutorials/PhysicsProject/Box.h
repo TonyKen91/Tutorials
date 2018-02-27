@@ -4,7 +4,8 @@ class Box :
 	public Rigidbody
 {
 public:
-	Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour);
+	Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour,
+		float rotation = 0, float elasticity = 1, float linearDrag = 0.01f, float angularDrag = 0.01f);
 	~Box();
 
 	virtual void draw();

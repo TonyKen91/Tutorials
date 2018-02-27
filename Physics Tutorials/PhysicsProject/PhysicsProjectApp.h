@@ -30,6 +30,10 @@ protected:
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
 
-	PhysicsScene* m_physicsScene;
+	PhysicsScene*		m_pinballScene;
+	PhysicsScene*		m_testScene;
 	float				m_totalEnergy = 0;
+
+private:
+	const float aspectRatio = 16 / 9.0f;
 };

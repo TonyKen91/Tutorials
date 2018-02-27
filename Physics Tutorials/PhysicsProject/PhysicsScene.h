@@ -42,7 +42,8 @@ public:
 	static bool box2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 
 	float totalEnergy;
-
+	float linearKinetic;
+	float rotationalKinetic;
 
 protected:
 

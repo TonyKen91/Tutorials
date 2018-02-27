@@ -38,10 +38,14 @@ void PhysicsScene::update(float dt)
 	while (accumulatedTime >= m_timeStep)
 	{
 		totalEnergy = 0;
+		linearKinetic = 0;
+		rotationalKinetic = 0;
 		for (auto pActor : m_actors)
 		{
 			pActor->fixedUpdate(m_gravity, m_timeStep);
 			totalEnergy += pActor->getTotalEnergy();
+			linearKinetic += pActor->getLinearKineticEnergy();
+			rotationalKinetic += pActor->getRotationalKineticEnergy();
 		}
 		accumulatedTime -= m_timeStep;
 

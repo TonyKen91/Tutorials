@@ -2,16 +2,15 @@
 #include "PhysicsScene.h"
 #include <iostream>
 
-#define MIN_LINEAR_THRESHOLD 0.1f
+#define MIN_LINEAR_THRESHOLD 0.2f
 #define MIN_ROTATION_THRESHOLD 0.01f
 
-Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float rotation, float mass, float inertia, float elasticity, float linearDrag, float angularDrag) :
-	PhysicsObject(shapeID), m_position (position), m_velocity (velocity), m_rotation(rotation), m_mass(mass), m_inertia(inertia), m_elasticity(elasticity), m_linearDrag(linearDrag), m_angularDrag(angularDrag)
+Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float mass, float rotation, float elasticity, float linearDrag, float angularDrag) :
+	PhysicsObject(shapeID), m_position (position), m_velocity (velocity), m_rotation(rotation), m_mass(mass), m_elasticity(elasticity), m_linearDrag(linearDrag), m_angularDrag(angularDrag)
 {
 	m_angularVelocity = 0;
 	m_isKinematic = false;
 	m_originalMass = m_mass;
-	m_originalInertia = m_inertia;
 }
 
 
@@ -47,9 +46,10 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 	if (abs(m_angularVelocity) < MIN_ROTATION_THRESHOLD)
 		m_angularVelocity = 0;
 
-
 	m_position += m_velocity * timeStep;
-	applyForce(gravity * m_mass * timeStep, glm::vec2(0, 0));
+	m_velocity += gravity*timeStep;
+	//applyForce(gravity * m_mass * timeStep, glm::vec2(0, 0));
+
 }
 
 void Rigidbody::debug()
@@ -135,6 +135,12 @@ glm::vec2 Rigidbody::toWorld(glm::vec2 contact)
 	return m_position + m_localX * contact.x + m_localY * contact.y;
 }
 
+float Rigidbody::getLinearKineticEnergy()
+{
+	float linearKinetic = ((0.5f)*m_mass* glm::dot(m_velocity, m_velocity));
+	return linearKinetic;
+}
+
 float Rigidbody::getPotentialGravitationalEnergy(glm::vec2 gravity)
 {
 
@@ -155,4 +161,12 @@ void Rigidbody::setKinematic(bool state)
 		m_mass = m_originalMass;
 		m_inertia = m_originalInertia;
 	}
+	else
+	{
+		m_velocity = { 0,0 };
+		m_angularVelocity = 0;
+		m_mass = INT_MAX;
+		m_inertia = INT_MAX;
+	}
+
 }

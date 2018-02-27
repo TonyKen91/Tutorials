@@ -7,7 +7,7 @@ class Spring :
 	public PhysicsObject
 {
 public:
-	Spring(Rigidbody* body1, Rigidbody* body2, float restLength, float springCoefficient, float damping = 0.1f, glm::vec2 contact1 = glm::vec2(0, 0), glm::vec2 contact2 = glm::vec2(0,0));
+	Spring(Rigidbody* body1, Rigidbody* body2, float springCoefficient, float damping = 0.1f, float restLength = 0, glm::vec2 contact1 = glm::vec2(0, 0), glm::vec2 contact2 = glm::vec2(0,0));
 	~Spring();
 
 
@@ -16,6 +16,8 @@ public:
 	virtual void draw();
 	virtual void resetPosition() {};
 	virtual float getTotalEnergy();
+	virtual float getLinearKineticEnergy();
+	virtual float getRotationalKineticEnergy();
 
 
 	virtual void CollideWithSphere(Sphere* pOther) {}

@@ -3,13 +3,14 @@
 #include "Box.h"
 #include <iostream>
 
-Sphere::Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour) :
-	Rigidbody(SPHERE, position, velocity, 0, mass, 1, 0, 0)
+Sphere::Sphere(glm::vec2 position, glm::vec2 velocity, float mass, float radius, glm::vec4 colour,
+	float rotation, float elasticity, float linearDrag, float angularDrag) :
+	Rigidbody(SPHERE, position, velocity, mass, rotation, elasticity, linearDrag, angularDrag)
 {
 	m_radius = radius;
 	m_colour = colour;
 	m_inertia = 0.5f * m_mass * m_radius * m_radius;
-	m_angularVelocity;
+	m_originalInertia = m_inertia;
 }
 
 
@@ -109,3 +110,12 @@ void Sphere::CollideWithBox(Box * pOther)
 {
 	pOther->CollideWithSphere(this);
 }
+
+//
+//float Sphere::getLinearKineticEnergy()
+//{
+//	float linearKinetic = ((0.5f)*m_mass* glm::dot(m_velocity, m_velocity));
+//	std::cout << "Velocity" << m_velocity.y << std::endl;
+//	std::cout << linearKinetic << std::endl;
+//	return linearKinetic;
+//}

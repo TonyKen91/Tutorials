@@ -6,7 +6,7 @@ class PhysicsScene;
 class Rigidbody : public PhysicsObject
 {
 public:
-	Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float rotation, float mass, float inertia = 1, float elasticity = 1, float linearDrag = 0.01f, float angularDrag = 0.01f);
+	Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float mass, float rotation, float elasticity = 1, float linearDrag = 0.01f, float angularDrag = 0.01f);
 	~Rigidbody();
 
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
@@ -24,8 +24,8 @@ public:
 	float getRotation() { return m_rotation; }
 	float getMass() { return (m_isKinematic) ? INT_MAX : m_mass; }
 
-	float getLinearKineticEnergy() { return ((0.5f)*m_mass* glm::dot(m_velocity, m_velocity)); }
-	float getRotationalKineticEnergy() { return ((0.5f)*m_inertia * m_angularVelocity * m_angularVelocity); }
+	virtual float getLinearKineticEnergy(); 
+	virtual float getRotationalKineticEnergy() { return ((0.5f)*m_inertia * m_angularVelocity * m_angularVelocity); }
 	float getPotentialGravitationalEnergy(glm::vec2 gravity);
 
 	float getElasticity() { return m_elasticity; }

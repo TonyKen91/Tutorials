@@ -34,13 +34,13 @@ bool PhysicsProjectApp::startup() {
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 15);
 
-	m_physicsScene = new PhysicsScene();
-	m_physicsScene->setGravity(vec2(0, -10));
-	m_physicsScene->setTimeStep(0.001f);
+	m_pinballScene = new PhysicsScene();
+	m_pinballScene->setGravity(vec2(0, 0));
+	m_pinballScene->setTimeStep(0.01f);
 
-	
+	setBackgroundColour(0, 0, 0, 1);
 
-		Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 1.0f, 1, vec4(1, 0, 0, 1));
+		//Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 1.0f, 1, vec4(1, 0, 0, 1));
 		//Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 1.0f, 1, vec4(0, 1, 0, 1));
 		//Sphere* ball3 = new Sphere(vec2(0, 15), vec2(0, 0), 1.0f, 1, vec4(1, 1, 0, 1));
 		//Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 1, 1));
@@ -61,7 +61,7 @@ bool PhysicsProjectApp::startup() {
 		//ball1->setKinematic(true);
 		//box2->setKinematic(true);
 
-		m_physicsScene->addActor(ball1);
+		//m_pinballScene->addActor(ball1);
 		//m_physicsScene->addActor(ball2);
 		//m_physicsScene->addActor(ball3);
 		//m_physicsScene->addActor(ball4);
@@ -98,7 +98,74 @@ bool PhysicsProjectApp::startup() {
 		//ball = new Sphere(vec2(-40, 0), vec2(10, 30), 3.0f, 1, vec4(1, 0, 0, 1));
 		//m_physicsScene->addActor(ball);
 	
+	const int height = 5;
+	const int width = 5;
 
+	Sphere* sphereArray[height][width];
+
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			sphereArray[i][j] = new Sphere(vec2(i*4, j*4), vec2(0, 0), 1.0f, 1, vec4(0.7f, 0, 0.7f, 1));
+			m_pinballScene->addActor(sphereArray[i][j]);
+		}
+	}
+
+	
+
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			Spring* springMaker;
+			if (j < width - 1)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 1], 100, 5);
+				m_pinballScene->addActor(springMaker);
+			}
+			if (i < height - 1)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j], 100, 5);
+				m_pinballScene->addActor(springMaker);
+			}
+			if (j < width - 1 && i < height - 1)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j+1], 100, 20);
+				m_pinballScene->addActor(springMaker);
+			}
+			if (j >0 && i < height - 1)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j - 1], 100, 20);
+				m_pinballScene->addActor(springMaker);
+			}
+
+			// Bend springs
+			// Horizontal and Vertial Bend springs
+			//if (j < width - 2)
+			//{
+			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 2], 100, 5);
+			//	m_pinballScene->addActor(springMaker);
+			//}
+			//if (i < height - 2)
+			//{
+			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j], 100, 5);
+			//	m_pinballScene->addActor(springMaker);
+			//}
+
+			//// Diagonal Bend springs
+			//if (j > 1 && i < height - 2)
+			//{
+			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 5);
+			//	m_pinballScene->addActor(springMaker);
+			//}
+			//if (j > 1 && i < height - 2)
+			//{
+			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 5);
+			//	m_pinballScene->addActor(springMaker);
+			//}
+		}
+	}
 
 	Box* box1 = new Box(vec2(-50, 0), vec2(0, 0), 10.0f, 100.0f, 1, vec4(1, 1, 1, 1));
 	Box* box3 = new Box(vec2(50, 0), vec2(0, 0), 10.0f, 100.0f, 1, vec4(1, 1, 1, 1));
@@ -114,10 +181,10 @@ bool PhysicsProjectApp::startup() {
 	box4->setKinematic(true);
 
 
-	m_physicsScene->addActor(box1);
-	m_physicsScene->addActor(box2);
-	m_physicsScene->addActor(box3);
-	m_physicsScene->addActor(box4);
+	m_pinballScene->addActor(box1);
+	m_pinballScene->addActor(box2);
+	m_pinballScene->addActor(box3);
+	m_pinballScene->addActor(box4);
 	//m_physicsScene->addActor(box5);
 	return true;
 }
@@ -135,18 +202,31 @@ void PhysicsProjectApp::update(float deltaTime) {
 
 	aie::Gizmos::clear();
 
-	float m_mouseX = (float)input->getMouseX();
-	float m_mouseY = (float)input->getMouseY();
+	int mouseX, mouseY;
+	input->getMouseXY(&mouseX, &mouseY);
+	
+	// convert screen coordinate to Gizmo coordinate
+	glm::vec2 screenSize = { getWindowWidth(), getWindowHeight() };
+	mouseX = (int)(mouseX * 200 / screenSize.x) - 100;
+	mouseY = (int)mouseY * 200 / (screenSize.y * aspectRatio) - 100/aspectRatio;
 
-	std::cout << m_mouseX << std::endl;
 
-	m_physicsScene->update(deltaTime);
-	m_physicsScene->updateGizmos();
-	m_totalEnergy = m_physicsScene->totalEnergy;
-	if (input->wasKeyPressed(aie::INPUT_KEY_M))
+	m_pinballScene->update(deltaTime);
+	m_pinballScene->updateGizmos();
+	m_totalEnergy = m_pinballScene->totalEnergy;
+	if (input->wasKeyPressed(aie::INPUT_KEY_RIGHT))
 	{
-		Sphere* ball10 = new Sphere(vec2(0, 0), vec2(0, 0), 1.0f, 1, vec4(1, 0, 0, 1));
-		m_physicsScene->addActor(ball10);
+		Sphere* ball10 = new Sphere(vec2(mouseX, mouseY), vec2(100, 0), 10.0f, 2, vec4(1, 0, 0, 1),0, 0);
+		m_pinballScene->addActor(ball10);
+	}
+	if (input->wasKeyPressed(aie::INPUT_KEY_LEFT))
+	{
+		Sphere* ball10 = new Sphere(vec2(mouseX, mouseY), vec2(-100, 0), 10.0f, 2, vec4(0, 1, 0, 1), 0, 0);
+		m_pinballScene->addActor(ball10);
+	}
+	if (input->wasMouseButtonPressed(aie::INPUT_KEY_RIGHT))
+	{
+		//m_pinballScene->removeActor
 	}
 
 
@@ -164,16 +244,22 @@ void PhysicsProjectApp::draw() {
 	m_2dRenderer->begin();
 
 	// draw your stuff here!
-	static float aspectRatio = 16 / 9.0f;
 	aie::Gizmos::draw2D(glm::ortho<float>(-100, 100, -100 / aspectRatio, 100 / aspectRatio, -1.0f, 1.0f));
 
 	// output some text, uses the last used colour
 	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
 
 
-	char energy[32];
-	sprintf_s(energy, 32, "Total Energy: %f", m_physicsScene->totalEnergy);
+	char energy[50];
+	sprintf_s(energy, 50, "Total Energy: %f", m_pinballScene->totalEnergy);
 	m_2dRenderer->drawText(m_font, energy, 0, 20);
+
+	sprintf_s(energy, 50, "Linear Kinetic Energy: %f", m_pinballScene->linearKinetic);
+	m_2dRenderer->drawText(m_font, energy, 0, 60);
+
+	sprintf_s(energy, 50, "Rotational Kinetic Energy: %f", m_pinballScene->rotationalKinetic);
+	m_2dRenderer->drawText(m_font, energy, 0, 40);
+
 
 	// done drawing sprites
 	m_2dRenderer->end();

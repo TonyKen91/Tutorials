@@ -5,7 +5,10 @@
 
 
 
-Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width, glm::vec4 colour) : Rigidbody(BOX, position, velocity, 0, mass, 1, 0, 0)
+Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width,
+ glm::vec4 colour, 
+	float rotation, float elasticity, float linearDrag, float angularDrag) : 
+	Rigidbody(BOX, position, velocity, mass, rotation, elasticity, linearDrag, angularDrag)
 {
 	m_extents.x = width / 2;
 	m_extents.y = height / 2;
@@ -13,6 +16,7 @@ Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float
 	m_height = height;
 	m_colour = colour;
 	m_inertia = 1.0f / 12.0f * mass * width * height;
+	m_originalInertia = m_inertia;
 }
 
 

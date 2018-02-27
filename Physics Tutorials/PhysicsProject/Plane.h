@@ -27,6 +27,10 @@ public:
 	virtual void CollideWithBox(Box* pOther);
 
 	float getTotalEnergy() { return 0; }
+	virtual float getLinearKineticEnergy() { return 0; }
+	virtual float getRotationalKineticEnergy() { return 0; }
+
+
 
 protected:
 	glm::vec2 m_normal;
