@@ -98,8 +98,8 @@ bool PhysicsProjectApp::startup() {
 		//ball = new Sphere(vec2(-40, 0), vec2(10, 30), 3.0f, 1, vec4(1, 0, 0, 1));
 		//m_physicsScene->addActor(ball);
 	
-	const int height = 5;
-	const int width = 5;
+	const int height = 6;
+	const int width = 6;
 
 	Sphere* sphereArray[height][width];
 
@@ -166,6 +166,10 @@ bool PhysicsProjectApp::startup() {
 			//}
 		}
 	}
+
+
+	//HACK
+	sphereArray[0][0]->applyForce(vec2(100, 0), vec2(0));
 
 	Box* box1 = new Box(vec2(-50, 0), vec2(0, 0), 10.0f, 100.0f, 1, vec4(1, 1, 1, 1));
 	Box* box3 = new Box(vec2(50, 0), vec2(0, 0), 10.0f, 100.0f, 1, vec4(1, 1, 1, 1));
