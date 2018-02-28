@@ -36,4 +36,5 @@ protected:
 
 private:
 	const float aspectRatio = 16 / 9.0f;
+	int springNumber = 0;
 };

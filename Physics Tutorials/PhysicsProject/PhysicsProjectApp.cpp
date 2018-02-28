@@ -98,8 +98,8 @@ bool PhysicsProjectApp::startup() {
 		//ball = new Sphere(vec2(-40, 0), vec2(10, 30), 3.0f, 1, vec4(1, 0, 0, 1));
 		//m_physicsScene->addActor(ball);
 	
-	const int height = 6;
-	const int width = 6;
+	const int height = 5;
+	const int width = 5;
 
 	Sphere* sphereArray[height][width];
 
@@ -123,25 +123,32 @@ bool PhysicsProjectApp::startup() {
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 1], 100, 5);
 				m_pinballScene->addActor(springMaker);
+				springNumber++;
 			}
 			if (i < height - 1)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j], 100, 5);
 				m_pinballScene->addActor(springMaker);
+				springNumber++;
 			}
+
+
 			if (j < width - 1 && i < height - 1)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j+1], 100, 20);
 				m_pinballScene->addActor(springMaker);
+				springNumber++;
 			}
 			if (j >0 && i < height - 1)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j - 1], 100, 20);
 				m_pinballScene->addActor(springMaker);
+				springNumber++;
 			}
 
-			// Bend springs
-			// Horizontal and Vertial Bend springs
+
+			// //Bend springs
+			// //Horizontal and Vertial Bend springs
 			//if (j < width - 2)
 			//{
 			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 2], 100, 5);
@@ -212,7 +219,7 @@ void PhysicsProjectApp::update(float deltaTime) {
 	// convert screen coordinate to Gizmo coordinate
 	glm::vec2 screenSize = { getWindowWidth(), getWindowHeight() };
 	mouseX = (int)(mouseX * 200 / screenSize.x) - 100;
-	mouseY = (int)mouseY * 200 / (screenSize.y * aspectRatio) - 100/aspectRatio;
+	mouseY = (int)(mouseY * 200 / (screenSize.y * aspectRatio) - 100/aspectRatio);
 
 
 	m_pinballScene->update(deltaTime);
@@ -233,6 +240,7 @@ void PhysicsProjectApp::update(float deltaTime) {
 		//m_pinballScene->removeActor
 	}
 
+	std::cout << springNumber << std::endl;
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
