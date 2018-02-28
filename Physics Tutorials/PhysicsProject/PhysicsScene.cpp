@@ -19,11 +19,25 @@ PhysicsScene::~PhysicsScene()
 void PhysicsScene::addActor(PhysicsObject* actor)
 {
 	m_actors.push_back(actor);
+	if (actor->getShapeID() >=0)
+		m_collidable.push_back(actor);
 }
 
 void PhysicsScene::PhysicsScene::removeActor(PhysicsObject* actor)
 {
 	m_actors.remove(actor);
+	if (actor->getShapeID() >= 0)
+	{
+		m_collidable.remove(actor);
+
+		// loop over all actors
+
+		// if its a spring, check if actor is one of its ends
+
+		// if so delete the spring
+	}
+
+	delete actor;
 }
 
 void PhysicsScene::update(float dt)
@@ -86,35 +100,58 @@ void PhysicsScene::updateGizmos()
 	}
 }
 
-void PhysicsScene::debugScene()
-{
-	int count = 0;
-	for (auto pActor : m_actors)
-	{
-		cout << count << " : ";
-		pActor->debug();
-		count++;
-	}
-}
+//void PhysicsScene::debugScene()
+//{
+//	int count = 0;
+//	for (auto pActor : m_actors)
+//	{
+//		cout << count << " : ";
+//		pActor->debug();
+//		count++;
+//	}
+//}
 
-typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
-
-static fn collisionFunctionArray[] =
-{
-	PhysicsScene::plane2Plane, PhysicsScene::plane2Sphere, PhysicsScene::plane2Box,
-	PhysicsScene::sphere2Plane, PhysicsScene::sphere2Sphere, PhysicsScene::sphere2Box,
-	PhysicsScene::box2Plane, PhysicsScene::box2Sphere, PhysicsScene::box2Box,
-};
+//typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
+//
+//static fn collisionFunctionArray[] =
+//{
+//	PhysicsScene::plane2Plane, PhysicsScene::plane2Sphere, PhysicsScene::plane2Box,
+//	PhysicsScene::sphere2Plane, PhysicsScene::sphere2Sphere, PhysicsScene::sphere2Box,
+//	PhysicsScene::box2Plane, PhysicsScene::box2Sphere, PhysicsScene::box2Box,
+//};
 
 void PhysicsScene::checkForCollision()
 {
-	int actorCount = m_actors.size();
+	//int actorCount = m_collidable.size();
+
+	////need to check for collisions against all objects except this one
+	//for (auto it = m_collidable.begin(); it!= std::prev(m_collidable.end()); it++)
+	//{
+	//	PhysicsObject* object1 = *it;
+	//	for (auto it2 = std::next(it); it2 != m_collidable.end(); it2++)
+	//	{
+	//		PhysicsObject* object2 = *it2;
+
+	//		if (object1->getShapeID() < 0 || object2->getShapeID() < 0)
+	//			continue;
+
+	//		// I think this handles the collision between objects with a joint but we'll see
+	//		// Might need to add collision handling between objects connected with joints
+
+
+	//		object1->Collide(object2);
+
+
+
+	 //The unmodified version
+
+	int actorCount = m_collidable.size();
 
 	//need to check for collisions against all objects except this one
-	for (auto it = m_actors.begin(); it!= std::prev(m_actors.end()); it++)
+	for (auto it = m_collidable.begin(); it!= std::prev(m_collidable.end()); it++)
 	{
 		PhysicsObject* object1 = *it;
-		for (auto it2 = std::next(it); it2 != m_actors.end(); it2++)
+		for (auto it2 = std::next(it); it2 != m_collidable.end(); it2++)
 		{
 			PhysicsObject* object2 = *it2;
 
@@ -126,6 +163,12 @@ void PhysicsScene::checkForCollision()
 
 
 			object1->Collide(object2);
+
+
+
+
+
+
 
 			//int shapeId1 = object1->getShapeID();
 			//int shapeId2 = object2->getShapeID();
@@ -144,64 +187,64 @@ void PhysicsScene::checkForCollision()
 
 
 }
-
-bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)
-{
-	return false;
-}
-
-bool PhysicsScene::plane2Sphere(PhysicsObject *, PhysicsObject *)
-{
-	return false;
-}
-
-bool PhysicsScene::plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
-{
-	return false;
-}
-
-bool PhysicsScene::sphere2Plane(PhysicsObject *, PhysicsObject *)
-{
-	return false;
-}
-
-bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
-{
-	// try to cast objects to sphere and sphere
-	Sphere *sphere1 = dynamic_cast<Sphere*>(obj1);
-	Sphere *sphere2 = dynamic_cast<Sphere*>(obj2);
-	// if we are successful then test for collision
-	if (sphere1 != nullptr && sphere2 != nullptr)
-	{
-
-	}
-
-	return false;
-}
-
-bool PhysicsScene::sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
-{
-	std::cout << "Not suppose to be here" << std::endl;
-	return false;
-}
-
-bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
-{
-	std::cout << "Not suppose to be here" << std::endl;
-	return false;
-}
-
-bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
-{
-	std::cout << "Not suppose to be here" << std::endl;
-	return false;
-}
-
-bool PhysicsScene::box2Box(PhysicsObject * obj1, PhysicsObject * obj2)
-{
-	std::cout << "Not suppose to be here" << std::endl;
-	return false;
-}
+//
+//bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)
+//{
+//	return false;
+//}
+//
+//bool PhysicsScene::plane2Sphere(PhysicsObject *, PhysicsObject *)
+//{
+//	return false;
+//}
+//
+//bool PhysicsScene::plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
+//{
+//	return false;
+//}
+//
+//bool PhysicsScene::sphere2Plane(PhysicsObject *, PhysicsObject *)
+//{
+//	return false;
+//}
+//
+//bool PhysicsScene::sphere2Sphere(PhysicsObject *obj1, PhysicsObject *obj2)
+//{
+//	// try to cast objects to sphere and sphere
+//	Sphere *sphere1 = dynamic_cast<Sphere*>(obj1);
+//	Sphere *sphere2 = dynamic_cast<Sphere*>(obj2);
+//	// if we are successful then test for collision
+//	if (sphere1 != nullptr && sphere2 != nullptr)
+//	{
+//
+//	}
+//
+//	return false;
+//}
+//
+//bool PhysicsScene::sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
+//{
+//	std::cout << "Not suppose to be here" << std::endl;
+//	return false;
+//}
+//
+//bool PhysicsScene::box2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
+//{
+//	std::cout << "Not suppose to be here" << std::endl;
+//	return false;
+//}
+//
+//bool PhysicsScene::box2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
+//{
+//	std::cout << "Not suppose to be here" << std::endl;
+//	return false;
+//}
+//
+//bool PhysicsScene::box2Box(PhysicsObject * obj1, PhysicsObject * obj2)
+//{
+//	std::cout << "Not suppose to be here" << std::endl;
+//	return false;
+//}
 
 //void RemoveFromVector(std::vector<int>& vec, int entry)
 //{

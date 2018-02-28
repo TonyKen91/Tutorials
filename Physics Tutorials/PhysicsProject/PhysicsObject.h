@@ -25,7 +25,6 @@ protected:
 
 public:
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep) = 0;
-	virtual void debug() = 0;
 	virtual void draw() = 0;
 	virtual void resetPosition() {};
 	virtual float getTotalEnergy() = 0;

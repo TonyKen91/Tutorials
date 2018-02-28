@@ -26,18 +26,18 @@ void Sphere::draw()
 	aie::Gizmos::add2DLine(m_position, m_position + end, glm::vec4(1, 1, 1, 1));
 }
 
-bool Sphere::checkCollision(PhysicsObject * pOther)
-{
-	Sphere* pOtherSphere = dynamic_cast<Sphere*>(pOther);
-	if (pOtherSphere != nullptr)
-	{
-		if ((m_radius + pOtherSphere->m_radius) > glm::distance(m_position, pOtherSphere->m_position))
-			return true;
-		else
-			return false;
-	}
-	return false;
-}
+//bool Sphere::checkCollision(PhysicsObject * pOther)
+//{
+//	Sphere* pOtherSphere = dynamic_cast<Sphere*>(pOther);
+//	if (pOtherSphere != nullptr)
+//	{
+//		if ((m_radius + pOtherSphere->m_radius) > glm::distance(m_position, pOtherSphere->m_position))
+//			return true;
+//		else
+//			return false;
+//	}
+//	return false;
+//}
 
 void Sphere::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
@@ -71,7 +71,7 @@ void Sphere::CollideWithSphere(Sphere * pOther)
 		}
 		else if (!m_isKinematic)
 			m_position += contactForce * 2.0f;
-		else
+		else if (!pOther->isKinematic())
 			pOther->m_position -= contactForce * 2.0f;
 
 

@@ -34,64 +34,69 @@ bool PhysicsProjectApp::startup() {
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 15);
 
-	m_pinballScene = new PhysicsScene();
-	m_pinballScene->setGravity(vec2(0, 0));
-	m_pinballScene->setTimeStep(0.01f);
+	m_gameScene = new PhysicsScene();
+	m_gameScene->setGravity(vec2(0, 0));
+	m_gameScene->setTimeStep(0.01f);
+
+	m_testScene = new PhysicsScene();
+	m_testScene->setGravity(vec2(0, 0));
+	m_testScene->setTimeStep(0.01f);
+
 
 	setBackgroundColour(0, 0, 0, 1);
 
-		//Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 1.0f, 1, vec4(1, 0, 0, 1));
-		//Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 1.0f, 1, vec4(0, 1, 0, 1));
-		//Sphere* ball3 = new Sphere(vec2(0, 15), vec2(0, 0), 1.0f, 1, vec4(1, 1, 0, 1));
-		//Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 1, 1));
+		Sphere* ball1 = new Sphere(vec2(-10, 10), vec2(0, 0), 1.0f, 1, vec4(1, 0, 0, 1));
+		Sphere* ball2 = new Sphere(vec2(10, 20), vec2(0, 0), 1.0f, 1, vec4(0, 1, 0, 1));
+		Sphere* ball3 = new Sphere(vec2(0, 15), vec2(0, 0), 1.0f, 1, vec4(1, 1, 0, 1));
+		Sphere* ball4 = new Sphere(vec2(10, 20), vec2(0, 0), 2.0f, 2, vec4(0, 1, 1, 1));
 
-		//Sphere* ball5 = new Sphere(vec2(0, 10), vec2(0, -200), 2.0f, 4, vec4(0.2f, 0.7f, 0.7f, 1));
-		//Sphere* ball6 = new Sphere(vec2(0, 20), vec2(0, 100), 2.0f, 4, vec4(0.5f, 0.1f, 0.5f, 1));
+		Sphere* ball5 = new Sphere(vec2(0, 10), vec2(0, -200), 2.0f, 4, vec4(0.2f, 0.7f, 0.7f, 1));
+		Sphere* ball6 = new Sphere(vec2(0, 20), vec2(0, 100), 2.0f, 4, vec4(0.5f, 0.1f, 0.5f, 1));
 
-		//Box* box1 = new Box(vec2(0, 0), vec2(0, -200), 10.0f, 10.0f, 10.0f, vec4(1, 0, 1, 1));
-		//Box* box2 = new Box(vec2(5, -40), vec2(2, 100), 10.0f, 10.0f, 10.0f, vec4(0.5f, 0.5f, 1, 1));
-		//Box* box3 = new Box(vec2(-20, -20), vec2(15, 11), 2.0f, 2.0f, 2.0f, vec4(0.5f, 0.5f, 1, 1));
-		//Box* box4 = new Box(vec2(20, -20), vec2(10, 15), 2.0f, 2.0f, 2.0f, vec4(0.8f, 0.5f, 0.2f, 1));
-		//Box* box5 = new Box(vec2(5, -40), vec2(0, 23), 13.0f, 13.0f, 13.0f, vec4(0.5f, 0.5f, 1, 1));
-
-
-		//Spring* spring1 = new Spring(ball1, ball2, 10, 10, 10);
-		//Spring* spring2 = new Spring(ball2, ball3, 10, 10, 10);
-
-		//ball1->setKinematic(true);
-		//box2->setKinematic(true);
-
-		//m_pinballScene->addActor(ball1);
-		//m_physicsScene->addActor(ball2);
-		//m_physicsScene->addActor(ball3);
-		//m_physicsScene->addActor(ball4);
-
-		//m_physicsScene->addActor(ball5);
-		//m_physicsScene->addActor(ball6);
-
-		//m_physicsScene->addActor(box1);
-		//m_physicsScene->addActor(box2);
-		//m_physicsScene->addActor(box3);
-		//m_physicsScene->addActor(box4);
-		//m_physicsScene->addActor(box5);
-
-		//m_physicsScene->addActor(spring1);
-		//m_physicsScene->addActor(spring2);
+		Box* box1 = new Box(vec2(0, 0), vec2(0, -200), 10.0f, 10.0f, 10.0f, vec4(1, 0, 1, 1));
+		Box* box2 = new Box(vec2(5, -40), vec2(2, 100), 10.0f, 10.0f, 10.0f, vec4(0.5f, 0.5f, 1, 1));
+		Box* box3 = new Box(vec2(-20, -20), vec2(15, 11), 2.0f, 2.0f, 2.0f, vec4(0.5f, 0.5f, 1, 1));
+		Box* box4 = new Box(vec2(20, -20), vec2(10, 15), 2.0f, 2.0f, 2.0f, vec4(0.8f, 0.5f, 0.2f, 1));
+		Box* box5 = new Box(vec2(5, -40), vec2(0, 23), 13.0f, 13.0f, 13.0f, vec4(0.5f, 0.5f, 1, 1));
 
 
-		//ball1->applyForce(vec2(100, -10), vec2(0, 0));
-		//ball2->applyForce(vec2(-100, -10), vec2(0, 0));
+		Spring* spring1 = new Spring(ball1, ball2, 10, 10, 10);
+		Spring* spring2 = new Spring(ball2, ball3, 10, 10, 10);
+
+		ball1->setKinematic(true);
+		box2->setKinematic(true);
+
+		m_testScene->addActor(ball1);
+		m_testScene->addActor(ball2);
+		m_testScene->addActor(ball3);
+		m_testScene->addActor(ball4);
+
+		m_testScene->addActor(ball5);
+		m_testScene->addActor(ball6);
+
+		m_testScene->addActor(box1);
+		m_testScene->addActor(box2);
+		m_testScene->addActor(box3);
+		m_testScene->addActor(box4);
+		//m_testScene->addActor(box5);
+
+		m_testScene->addActor(spring1);
+		m_testScene->addActor(spring2);
 
 
-		//Plane* plane1 = new Plane(glm::vec2(0, 1), -50);
-		//Plane* plane2 = new Plane(glm::vec2(-1, 3), 30);
-		//Plane* plane3 = new Plane(glm::vec2(-5, 5), 20);
-		//Plane* plane4 = new Plane(glm::vec2(5, -3), 50);
+		ball1->applyForce(vec2(100, -10), vec2(0, 0));
+		ball2->applyForce(vec2(-100, -10), vec2(0, 0));
 
-		//m_physicsScene->addActor(plane1);
-		//m_physicsScene->addActor(plane2);
-		//m_physicsScene->addActor(plane3);
-		//m_physicsScene->addActor(plane4);
+
+		Plane* plane1 = new Plane(glm::vec2(0, 1), -50);
+		Plane* plane2 = new Plane(glm::vec2(-1, 3), 30);
+		Plane* plane3 = new Plane(glm::vec2(-5, 5), 20);
+		Plane* plane4 = new Plane(glm::vec2(5, -3), 50);
+
+		m_testScene->addActor(plane1);
+		m_testScene->addActor(plane2);
+		m_testScene->addActor(plane3);
+		m_testScene->addActor(plane4);
 
 
 		//Sphere* ball;
@@ -108,94 +113,106 @@ bool PhysicsProjectApp::startup() {
 		for (int j = 0; j < width; j++)
 		{
 			sphereArray[i][j] = new Sphere(vec2(i*4, j*4), vec2(0, 0), 1.0f, 1, vec4(0.7f, 0, 0.7f, 1));
-			m_pinballScene->addActor(sphereArray[i][j]);
+			m_gameScene->addActor(sphereArray[i][j]);
+			ballNumber++;
 		}
 	}
 
 	
 
-	for (int i = 0; i < height; i++)
-	{
-		for (int j = 0; j < width; j++)
-		{
-			Spring* springMaker;
-			if (j < width - 1)
-			{
-				springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 1], 100, 5);
-				m_pinballScene->addActor(springMaker);
-				springNumber++;
-			}
-			if (i < height - 1)
-			{
-				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j], 100, 5);
-				m_pinballScene->addActor(springMaker);
-				springNumber++;
-			}
+	//for (int i = 0; i < height; i++)
+	//{
+	//	for (int j = 0; j < width; j++)
+	//	{
+	//		Spring* springMaker;
+	//		if (j < width - 1)
+	//		{
+	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 1], 100, 5);
+	//			m_gameScene->addActor(springMaker);
+	//			springNumber++;
+	//		}
+	//		if (i < height - 1)
+	//		{
+	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j], 100, 5);
+	//			m_gameScene->addActor(springMaker);
+	//			springNumber++;
+	//		}
 
 
-			if (j < width - 1 && i < height - 1)
-			{
-				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j+1], 100, 20);
-				m_pinballScene->addActor(springMaker);
-				springNumber++;
-			}
-			if (j >0 && i < height - 1)
-			{
-				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j - 1], 100, 20);
-				m_pinballScene->addActor(springMaker);
-				springNumber++;
-			}
+	//		if (j < width - 1 && i < height - 1)
+	//		{
+	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j+1], 100, 20);
+	//			m_gameScene->addActor(springMaker);
+	//			springNumber++;
+	//		}
+	//		if (j >0 && i < height - 1)
+	//		{
+	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j - 1], 100, 20);
+	//			m_gameScene->addActor(springMaker);
+	//			springNumber++;
+	//		}
 
 
-			// //Bend springs
-			// //Horizontal and Vertial Bend springs
-			//if (j < width - 2)
-			//{
-			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 2], 100, 5);
-			//	m_pinballScene->addActor(springMaker);
-			//}
-			//if (i < height - 2)
-			//{
-			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j], 100, 5);
-			//	m_pinballScene->addActor(springMaker);
-			//}
+	//		 //Bend springs
+	//		 //Horizontal and Vertial Bend springs
+	//		if (j < width - 2)
+	//		{
+	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 2], 50, 20);
+	//			m_gameScene->addActor(springMaker);
+	//		}
+	//		if (i < height - 2)
+	//		{
+	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j], 50, 20);
+	//			m_gameScene->addActor(springMaker);
+	//		}
 
-			//// Diagonal Bend springs
-			//if (j > 1 && i < height - 2)
-			//{
-			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 5);
-			//	m_pinballScene->addActor(springMaker);
-			//}
-			//if (j > 1 && i < height - 2)
-			//{
-			//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 5);
-			//	m_pinballScene->addActor(springMaker);
-			//}
-		}
-	}
+	//		// corner to corner springs
+	//		if (i == 0 && j == 0)
+	//		{
+	//			springMaker = new Spring(sphereArray[i][j], sphereArray[height-1][width-1], 100, 20);
+	//			m_gameScene->addActor(springMaker);
+	//		}
+
+	//		//// Diagonal Bend springs
+	//		//if (j > 1 && i < height - 2)
+	//		//{
+	//		//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 50);
+	//		//	m_pinballScene->addActor(springMaker);
+	//		//}
+	//		//if (j > 1 && i < height - 2)
+	//		//{
+	//		//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 50);
+	//		//	m_pinballScene->addActor(springMaker);
+	//		//}
+	//	}
+	//}
 
 
 	//HACK
 	sphereArray[0][0]->applyForce(vec2(100, 0), vec2(0));
 
-	Box* box1 = new Box(vec2(-50, 0), vec2(0, 0), 10.0f, 100.0f, 1, vec4(1, 1, 1, 1));
-	Box* box3 = new Box(vec2(50, 0), vec2(0, 0), 10.0f, 100.0f, 1, vec4(1, 1, 1, 1));
+	const float borderWidth = 100;
+	const float borderHeight = 50;
+
+	// Side borders
+	Box* border1 = new Box(vec2(-borderWidth/2.0f, 0), vec2(0, 0), 10.0f, borderHeight, 1, vec4(1, 1, 1, 1));
+	Box* border2 = new Box(vec2(borderWidth/2.0f, 0), vec2(0, 0), 10.0f, borderHeight, 1, vec4(1, 1, 1, 1));
+
+	// Top and bottom borders
+	Box* border3 = new Box(vec2(0, borderHeight/2.0f), vec2(0, 0), 10.0f, 1, borderWidth, vec4(1, 1, 1, 1));
+	Box* border4 = new Box(vec2(0, -borderHeight/2.0f), vec2(0, 0), 10.0f, 1, borderWidth, vec4(1, 1, 1, 1));
 
 
-	Box* box2 = new Box(vec2(0, 50), vec2(0, 0), 10.0f, 1, 100, vec4(1, 1, 1, 1));
-	Box* box4 = new Box(vec2(0, -50), vec2(0, 0), 10.0f, 1, 100, vec4(1, 1, 1, 1));
-	//Box* box5 = new Box(vec2(5, -40), vec2(0, 23), 13.0f, 13.0f, 13.0f, vec4(0.5f, 0.5f, 1, 1));
-
-	box1->setKinematic(true);
-	box2->setKinematic(true);
-	box3->setKinematic(true);
-	box4->setKinematic(true);
+	border1->setKinematic(true);
+	border2->setKinematic(true);
+	border3->setKinematic(true);
+	border4->setKinematic(true);
 
 
-	m_pinballScene->addActor(box1);
-	m_pinballScene->addActor(box2);
-	m_pinballScene->addActor(box3);
-	m_pinballScene->addActor(box4);
+	m_gameScene->addActor(border1);
+	m_gameScene->addActor(border2);
+	m_gameScene->addActor(border3);
+	m_gameScene->addActor(border4);
 	//m_physicsScene->addActor(box5);
 	return true;
 }
@@ -221,26 +238,31 @@ void PhysicsProjectApp::update(float deltaTime) {
 	mouseX = (int)(mouseX * 200 / screenSize.x) - 100;
 	mouseY = (int)(mouseY * 200 / (screenSize.y * aspectRatio) - 100/aspectRatio);
 
+	//m_testScene->update(deltaTime);
+	//m_testScene->updateGizmos();
 
-	m_pinballScene->update(deltaTime);
-	m_pinballScene->updateGizmos();
-	m_totalEnergy = m_pinballScene->totalEnergy;
+	m_gameScene->update(deltaTime);
+	m_gameScene->updateGizmos();
+	m_totalEnergy = m_gameScene->totalEnergy;
 	if (input->wasKeyPressed(aie::INPUT_KEY_RIGHT))
 	{
 		Sphere* ball10 = new Sphere(vec2(mouseX, mouseY), vec2(100, 0), 10.0f, 2, vec4(1, 0, 0, 1),0, 0);
-		m_pinballScene->addActor(ball10);
+		m_gameScene->addActor(ball10);
+		ballNumber++;
 	}
 	if (input->wasKeyPressed(aie::INPUT_KEY_LEFT))
 	{
 		Sphere* ball10 = new Sphere(vec2(mouseX, mouseY), vec2(-100, 0), 10.0f, 2, vec4(0, 1, 0, 1), 0, 0);
-		m_pinballScene->addActor(ball10);
+		m_gameScene->addActor(ball10);
+		ballNumber++;
 	}
 	if (input->wasMouseButtonPressed(aie::INPUT_KEY_RIGHT))
 	{
 		//m_pinballScene->removeActor
 	}
 
-	std::cout << springNumber << std::endl;
+	//std::cout << springNumber << std::endl;
+	std::cout << ballNumber << std::endl;
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
@@ -263,13 +285,13 @@ void PhysicsProjectApp::draw() {
 
 
 	char energy[50];
-	sprintf_s(energy, 50, "Total Energy: %f", m_pinballScene->totalEnergy);
+	sprintf_s(energy, 50, "Total Energy: %f", m_gameScene->totalEnergy);
 	m_2dRenderer->drawText(m_font, energy, 0, 20);
 
-	sprintf_s(energy, 50, "Linear Kinetic Energy: %f", m_pinballScene->linearKinetic);
+	sprintf_s(energy, 50, "Linear Kinetic Energy: %f", m_gameScene->linearKinetic);
 	m_2dRenderer->drawText(m_font, energy, 0, 60);
 
-	sprintf_s(energy, 50, "Rotational Kinetic Energy: %f", m_pinballScene->rotationalKinetic);
+	sprintf_s(energy, 50, "Rotational Kinetic Energy: %f", m_gameScene->rotationalKinetic);
 	m_2dRenderer->drawText(m_font, energy, 0, 40);
 
 

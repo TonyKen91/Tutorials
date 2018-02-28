@@ -117,7 +117,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 		}
 		else if (!m_isKinematic)
 			m_position += penVec;
-		else
+		else if (!pOther->isKinematic())
 			pOther->setPosition(pOther->getPosition() - penVec);
 
 		//
@@ -361,10 +361,5 @@ void Box::draw()
 
 	aie::Gizmos::add2DTri(p1, p3, p2, m_colour/*glm::vec4(1, 1, 1, 1)*/);
 	aie::Gizmos::add2DTri(p3, p1, p4, m_colour);
-}
-
-bool Box::checkCollision(PhysicsObject * pOther)
-{
-	return false;
 }
 

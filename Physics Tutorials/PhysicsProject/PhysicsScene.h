@@ -19,7 +19,7 @@ public:
 	void removeActor(PhysicsObject* actor);
 	void update(float dt);
 	void updateGizmos();
-	void debugScene();
+	//void debugScene();
 
 	void setGravity(const glm::vec2 gravity) { m_gravity = gravity; }
 	glm::vec2 getGravity() const { return m_gravity; }
@@ -29,17 +29,17 @@ public:
 
 	void checkForCollision();
 
-	static bool plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
-	static bool plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
-	static bool plane2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool plane2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 
-	static bool sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
-	static bool sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
-	static bool sphere2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool sphere2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 
-	static bool box2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
-	static bool box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
-	static bool box2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool box2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+	//static bool box2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 
 	float totalEnergy;
 	float linearKinetic;
@@ -50,5 +50,6 @@ protected:
 	glm::vec2 m_gravity;
 	float m_timeStep;
 	std::list<PhysicsObject*> m_actors;
+	std::list<PhysicsObject*> m_collidable;
 };
 

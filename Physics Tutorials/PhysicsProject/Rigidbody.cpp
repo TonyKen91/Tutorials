@@ -52,10 +52,6 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 
 }
 
-void Rigidbody::debug()
-{
-}
-
 void Rigidbody::applyForce(glm::vec2 force, glm::vec2 pos)
 {
 	// These calculation calculates instantaneous velocity and angular velocity which are then added to the cumulative velocities
@@ -63,11 +59,6 @@ void Rigidbody::applyForce(glm::vec2 force, glm::vec2 pos)
 	m_angularVelocity += (force.y * pos.x - force.x * pos.y) / m_inertia; // This adds torque/moment x and y component to the angular velocity per frame
 }
 
-//void Rigidbody::applyForceToActor(Rigidbody * actor2, glm::vec2 force)
-//{
-//	actor2->applyForce(force, glm::vec2(0, 0));
-//	applyForce(-force, glm::vec2(0, 0));
-//}
 
 void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec2* collisionNormal)
 {
