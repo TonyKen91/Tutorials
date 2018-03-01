@@ -5,6 +5,7 @@
 #include <glm\ext.hpp>
 #include <Gizmos.h>
 
+class PhysicsScene;
 class Sphere;
 class Plane;
 class Box;
@@ -30,6 +31,7 @@ public:
 	virtual float getTotalEnergy() = 0;
 	virtual float getLinearKineticEnergy() = 0;
 	virtual float getRotationalKineticEnergy() = 0;
+	virtual void setGameScene(PhysicsScene* scene);
 
 	virtual void CollideWithSphere(Sphere* pOther) = 0;
 	virtual void CollideWithPlane(Plane* pOther) = 0;
@@ -41,5 +43,6 @@ public:
 
 protected:
 	ShapeType m_shapeID;
+	PhysicsScene* m_scene = nullptr;
 };
 

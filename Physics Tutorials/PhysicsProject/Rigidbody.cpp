@@ -31,7 +31,15 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 		m_inertia = INT_MAX;
 		return;
 	}
-
+	
+	if (m_despawnable)
+	{
+		m_despawnTimer -= timeStep;
+		if (m_despawnTimer <= 0)
+		{
+			m_scene->addToRemoveList(this);
+		}
+	}
 
 	m_velocity += gravity * timeStep;
 
@@ -40,15 +48,13 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 	m_rotation += m_angularVelocity * timeStep;
 	m_angularVelocity -= m_angularVelocity *m_angularDrag * timeStep;
 
-	if (length(m_velocity) < MIN_LINEAR_THRESHOLD)
-		if (length(m_velocity) < length(gravity)*m_linearDrag*timeStep)
-			m_velocity = glm::vec2(0, 0);
-	if (abs(m_angularVelocity) < MIN_ROTATION_THRESHOLD)
-		m_angularVelocity = 0;
+	applySleepThreshold(gravity, timeStep);
 
 	m_position += m_velocity * timeStep;
 	m_velocity += gravity*timeStep;
 	//applyForce(gravity * m_mass * timeStep, glm::vec2(0, 0));
+
+	applySleepThreshold(gravity, timeStep);
 
 }
 
@@ -115,6 +121,16 @@ void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec
 	//applyForceToActor(actor2, force);
 }
 
+void Rigidbody::applySleepThreshold(glm::vec2 gravity, float timeStep)
+{
+	if (glm::length(m_velocity) < MIN_LINEAR_THRESHOLD)
+		if (glm::length(m_velocity) < glm::length(gravity)*m_linearDrag*timeStep)
+			m_velocity = glm::vec2(0, 0);
+	if (abs(m_angularVelocity) < MIN_ROTATION_THRESHOLD)
+		m_angularVelocity = 0;
+
+}
+
 glm::vec2 Rigidbody::toWorld(glm::vec2 contact)
 {
 	// This function is used to convert from local to world coordinates
@@ -160,4 +176,11 @@ void Rigidbody::setKinematic(bool state)
 		m_inertia = INT_MAX;
 	}
 
+}
+
+
+void Rigidbody::setDespawnTimer(float timer)
+{
+	m_despawnable = true;
+	m_despawnTimer = timer;
 }

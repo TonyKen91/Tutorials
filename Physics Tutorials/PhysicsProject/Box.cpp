@@ -3,6 +3,8 @@
 #include "Plane.h"
 #include "Sphere.h"
 
+#include <iostream>
+
 
 
 Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width,
@@ -64,8 +66,9 @@ void Box::CollideWithSphere(Sphere* pOther)
 	/////////////////////////////////////////////////////////////////////
 
 	glm::vec2* direction = nullptr;
-	// get the local position of the circle cnetre
+	// get the local position of the circle centre
 	glm::vec2 localPos(glm::dot(m_localX, circlePos), glm::dot(m_localY, circlePos));
+
 	if (localPos.y < h2 && localPos.y > -h2)
 	{
 		if (localPos.x > 0 && localPos.x < w2 + pOther->getRadius())
@@ -73,12 +76,14 @@ void Box::CollideWithSphere(Sphere* pOther)
 			numContacts++;
 			contact += glm::vec2(w2, localPos.y);
 			direction = new glm::vec2(m_localX);
+			//std::cout << "Circle is on the right" << std::endl;
 		}
 		if (localPos.x < 0 && localPos.x > -(w2 + pOther->getRadius()))
 		{
 			numContacts++;
 			contact += glm::vec2(-w2, localPos.y);
 			direction = new glm::vec2(-m_localX);
+			//std::cout << "Circle is on the left" << std::endl;
 		}
 	}
 
@@ -88,13 +93,17 @@ void Box::CollideWithSphere(Sphere* pOther)
 		{
 			numContacts++;
 			contact += glm::vec2(localPos.x, h2);
-			direction = new glm::vec2(m_localY);
+			if (direction == nullptr && localPos.x * localPos.x > localPos.y * localPos.y)
+				direction = new glm::vec2(m_localY);
+			//std::cout << "Circle is on top" << std::endl;
 		}
 		if (localPos.y < 0 && localPos.y > -(h2 + pOther->getRadius()))
 		{
 			numContacts++;
 			contact += glm::vec2(localPos.x, -h2);
-			direction = new glm::vec2(-m_localY);
+			if (direction == nullptr && localPos.x * localPos.x > localPos.y * localPos.y)
+				direction = new glm::vec2(-m_localY);
+			//std::cout << "Circle is below" << std::endl;
 		}
 	}
 
@@ -108,8 +117,11 @@ void Box::CollideWithSphere(Sphere* pOther)
 		float pen = pOther->getRadius() - glm::length(contact - pOther->getPosition());
 
 		glm::vec2 penVec = glm::normalize(contact - pOther->getPosition()) * pen;
+		//std::cout << "Number of Contact: " << numContacts << std::endl;
+		//std::cout << "penVec: " << penVec.x << " , " << penVec.y << std::endl;
 
-		// move each shape away in the direction of penetration
+
+		// move each shape away in the direction of penetration depending on if they are static or kinematic
 		if (!m_isKinematic && !pOther->isKinematic())
 		{
 			m_position += penVec * 0.5f;

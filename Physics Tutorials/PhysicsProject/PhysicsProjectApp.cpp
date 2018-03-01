@@ -103,6 +103,12 @@ bool PhysicsProjectApp::startup() {
 		//ball = new Sphere(vec2(-40, 0), vec2(10, 30), 3.0f, 1, vec4(1, 0, 0, 1));
 		//m_physicsScene->addActor(ball);
 	
+
+
+///////////////////////////////////////////////////////////////////////
+
+
+
 	const int height = 5;
 	const int width = 5;
 
@@ -120,87 +126,96 @@ bool PhysicsProjectApp::startup() {
 
 	
 
-	//for (int i = 0; i < height; i++)
-	//{
-	//	for (int j = 0; j < width; j++)
-	//	{
-	//		Spring* springMaker;
-	//		if (j < width - 1)
-	//		{
-	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 1], 100, 5);
-	//			m_gameScene->addActor(springMaker);
-	//			springNumber++;
-	//		}
-	//		if (i < height - 1)
-	//		{
-	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j], 100, 5);
-	//			m_gameScene->addActor(springMaker);
-	//			springNumber++;
-	//		}
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			Spring* springMaker;
+			if (j < width - 1)
+			{//10, 5
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 1], 100, 5);
+				m_gameScene->addActor(springMaker);
+				springNumber++;
+			}
+			if (i < height - 1)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j], 100, 5);
+				m_gameScene->addActor(springMaker);
+				springNumber++;
+			}
 
 
-	//		if (j < width - 1 && i < height - 1)
-	//		{
-	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j+1], 100, 20);
-	//			m_gameScene->addActor(springMaker);
-	//			springNumber++;
-	//		}
-	//		if (j >0 && i < height - 1)
-	//		{
-	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j - 1], 100, 20);
-	//			m_gameScene->addActor(springMaker);
-	//			springNumber++;
-	//		}
+			if (j < width - 1 && i < height - 1)
+			{//100, 20
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j+1], 100, 20);
+				m_gameScene->addActor(springMaker);
+				springNumber++;
+			}
+			if (j >0 && i < height - 1)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j - 1], 100, 20);
+				m_gameScene->addActor(springMaker);
+				springNumber++;
+			}
 
 
-	//		 //Bend springs
-	//		 //Horizontal and Vertial Bend springs
-	//		if (j < width - 2)
-	//		{
-	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 2], 50, 20);
-	//			m_gameScene->addActor(springMaker);
-	//		}
-	//		if (i < height - 2)
-	//		{
-	//			springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j], 50, 20);
-	//			m_gameScene->addActor(springMaker);
-	//		}
+			 //Bend springs
+			 //Horizontal and Vertial Bend springs
+			if (j < width - 2)
+			{//50, 20
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 2], 50, 20);
+				m_gameScene->addActor(springMaker);
+			}
+			if (i < height - 2)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j], 50, 20);
+				m_gameScene->addActor(springMaker);
+			}
 
-	//		// corner to corner springs
-	//		if (i == 0 && j == 0)
-	//		{
-	//			springMaker = new Spring(sphereArray[i][j], sphereArray[height-1][width-1], 100, 20);
-	//			m_gameScene->addActor(springMaker);
-	//		}
+			// corner springs
+			if (i == 0 && j == 0)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[height - 1][width - 1], 10, 10);
+				m_gameScene->addActor(springMaker);
+				springMaker = new Spring(sphereArray[i][width - 1], sphereArray[height - 1][j], 10, 10);
+				m_gameScene->addActor(springMaker);
 
-	//		//// Diagonal Bend springs
-	//		//if (j > 1 && i < height - 2)
-	//		//{
-	//		//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 50);
-	//		//	m_pinballScene->addActor(springMaker);
-	//		//}
-	//		//if (j > 1 && i < height - 2)
-	//		//{
-	//		//	springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 50);
-	//		//	m_pinballScene->addActor(springMaker);
-	//		//}
-	//	}
-	//}
+			}
+			
+
+			// Diagonal Bend springs
+			if (j > 1 && i < height - 2)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 50);
+				m_gameScene->addActor(springMaker);
+			}
+			if (j > 1 && i < height - 2)
+			{
+				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j - 2], 100, 50);
+				m_gameScene->addActor(springMaker);
+			}
+		}
+	}
 
 
 	//HACK
 	sphereArray[0][0]->applyForce(vec2(100, 0), vec2(0));
 
-	const float borderWidth = 100;
-	const float borderHeight = 50;
+
+
+///////////////////////////////////////////////////
+
+
+	const float borderWidth = 150;
+	const float borderHeight = 100;
 
 	// Side borders
-	Box* border1 = new Box(vec2(-borderWidth/2.0f, 0), vec2(0, 0), 10.0f, borderHeight, 1, vec4(1, 1, 1, 1));
-	Box* border2 = new Box(vec2(borderWidth/2.0f, 0), vec2(0, 0), 10.0f, borderHeight, 1, vec4(1, 1, 1, 1));
+	Box* border1 = new Box(vec2(-borderWidth/2.0f, 0), vec2(0, 0), 10.0f, borderHeight, 5, vec4(1, 1, 1, 1));
+	Box* border2 = new Box(vec2(borderWidth/2.0f, 0), vec2(0, 0), 10.0f, borderHeight, 5, vec4(1, 1, 1, 1));
 
 	// Top and bottom borders
-	Box* border3 = new Box(vec2(0, borderHeight/2.0f), vec2(0, 0), 10.0f, 1, borderWidth, vec4(1, 1, 1, 1));
-	Box* border4 = new Box(vec2(0, -borderHeight/2.0f), vec2(0, 0), 10.0f, 1, borderWidth, vec4(1, 1, 1, 1));
+	Box* border3 = new Box(vec2(0, borderHeight/2.0f), vec2(0, 0), 10.0f, 5, borderWidth, vec4(1, 1, 1, 1));
+	Box* border4 = new Box(vec2(0, -borderHeight/2.0f), vec2(0, 0), 10.0f, 5, borderWidth, vec4(1, 1, 1, 1));
 
 
 	border1->setKinematic(true);
@@ -213,7 +228,6 @@ bool PhysicsProjectApp::startup() {
 	m_gameScene->addActor(border2);
 	m_gameScene->addActor(border3);
 	m_gameScene->addActor(border4);
-	//m_physicsScene->addActor(box5);
 	return true;
 }
 
@@ -221,6 +235,8 @@ void PhysicsProjectApp::shutdown() {
 
 	delete m_font;
 	delete m_2dRenderer;
+	delete m_gameScene;
+	delete m_testScene;
 }
 
 void PhysicsProjectApp::update(float deltaTime) {
@@ -246,23 +262,28 @@ void PhysicsProjectApp::update(float deltaTime) {
 	m_totalEnergy = m_gameScene->totalEnergy;
 	if (input->wasKeyPressed(aie::INPUT_KEY_RIGHT))
 	{
-		Sphere* ball10 = new Sphere(vec2(mouseX, mouseY), vec2(100, 0), 10.0f, 2, vec4(1, 0, 0, 1),0, 0);
-		m_gameScene->addActor(ball10);
+		Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1),0, 0.5f);
+		playerBall->setDespawnTimer(20);
+		m_gameScene->addActor(playerBall);
 		ballNumber++;
 	}
 	if (input->wasKeyPressed(aie::INPUT_KEY_LEFT))
 	{
-		Sphere* ball10 = new Sphere(vec2(mouseX, mouseY), vec2(-100, 0), 10.0f, 2, vec4(0, 1, 0, 1), 0, 0);
-		m_gameScene->addActor(ball10);
+		Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(-100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
+		playerBall->setDespawnTimer(20);
+		m_gameScene->addActor(playerBall);
 		ballNumber++;
 	}
-	if (input->wasMouseButtonPressed(aie::INPUT_KEY_RIGHT))
+	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_RIGHT))
 	{
-		//m_pinballScene->removeActor
+		Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(0, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0);
+		playerBall->setDespawnTimer(5);
+		m_gameScene->addActor(playerBall);
+		ballNumber++;
 	}
 
 	//std::cout << springNumber << std::endl;
-	std::cout << ballNumber << std::endl;
+	//std::cout << ballNumber << std::endl;
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))

@@ -29,6 +29,8 @@ public:
 
 	void checkForCollision();
 
+	void addToRemoveList(PhysicsObject* actor);
+
 	//static bool plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	//static bool plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	//static bool plane2Box(PhysicsObject* obj1, PhysicsObject* obj2);
@@ -51,5 +53,6 @@ protected:
 	float m_timeStep;
 	std::list<PhysicsObject*> m_actors;
 	std::list<PhysicsObject*> m_collidable;
+	std::list<PhysicsObject*> m_deletedObjects;
 };
 

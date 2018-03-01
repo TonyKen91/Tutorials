@@ -13,6 +13,7 @@ public:
 	void applyForce(glm::vec2 force, glm::vec2 pos);
 	void resolveCollision(Rigidbody* actor2, glm::vec2 contact, glm::vec2* collisionNormal = nullptr);
 
+	void applySleepThreshold(glm::vec2 gravity, float timeStep);
 
 	glm::vec2 toWorld(glm::vec2 contact);
 
@@ -30,6 +31,9 @@ public:
 	void setPosition(glm::vec2 position) { m_position = position; }
 
 	virtual float getTotalEnergy();
+	virtual void setDespawnTimer(float timer);
+
+
 
 	void setKinematic(bool state); 
 	bool isKinematic() { return m_isKinematic; }
@@ -54,6 +58,8 @@ protected:
 
 	bool m_isKinematic;
 
+	float m_despawnTimer = 5.0f;
+	bool m_despawnable = false;
 
 
 	// store the local x, y axes of the rigidbody based on its angle of rotation

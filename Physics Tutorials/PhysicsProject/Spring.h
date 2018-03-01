@@ -7,7 +7,7 @@ class Spring :
 	public PhysicsObject
 {
 public:
-	Spring(Rigidbody* body1, Rigidbody* body2, float springCoefficient, float damping = 0.1f, float restLength = 0, glm::vec2 contact1 = glm::vec2(0, 0), glm::vec2 contact2 = glm::vec2(0,0));
+	Spring(Rigidbody* body1, Rigidbody* body2, float springCoefficient, float damping = 0.1f, float breakPointMultiplier = 10.0f, float restLength = 0, glm::vec2 contact1 = glm::vec2(0, 0), glm::vec2 contact2 = glm::vec2(0,0));
 	~Spring();
 
 
@@ -25,6 +25,10 @@ public:
 	virtual void CollideWithBox(Box* pOther) {}
 	virtual void Collide(PhysicsObject* obj) {}
 
+
+	void setBreakable(bool state, float breakPointMultiplier = 10.0f);
+
+
 	ShapeType getShapeID() { return m_shapeID; }
 
 
@@ -39,6 +43,7 @@ private:
 	float m_restLength;
 	float m_springCoefficient;			// the restoring force
 	float m_springForceCap;
-	bool m_breakable;
+	bool m_breakable = true;
+	float m_breakPoint;
 };
 

@@ -19,6 +19,7 @@ PhysicsScene::~PhysicsScene()
 void PhysicsScene::addActor(PhysicsObject* actor)
 {
 	m_actors.push_back(actor);
+	actor->setGameScene(this);
 	if (actor->getShapeID() >=0)
 		m_collidable.push_back(actor);
 }
@@ -65,6 +66,10 @@ void PhysicsScene::update(float dt)
 
 		// check for collisions (ideally you'd want to have some sort of
 		// scene management in place)
+		
+		for (auto pActor : m_deletedObjects)
+			removeActor(pActor);
+		m_deletedObjects.clear();
 
 		checkForCollision();
 
@@ -90,6 +95,9 @@ void PhysicsScene::update(float dt)
 		//}
 		dirty.clear();
 	}
+
+
+
 }
 
 void PhysicsScene::updateGizmos()
@@ -186,6 +194,10 @@ void PhysicsScene::checkForCollision()
 	}
 
 
+}
+void PhysicsScene::addToRemoveList(PhysicsObject * actor)
+{
+	m_deletedObjects.push_back(actor);
 }
 //
 //bool PhysicsScene::plane2Plane(PhysicsObject *, PhysicsObject *)
