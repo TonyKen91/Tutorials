@@ -25,7 +25,6 @@ public:
 	//virtual void CollideWithObj(PhysicsObject* obj) { obj->CollideWithSphere(this); }
 	//virtual void CollideWithSphere(Sphere * sphere);
 
-	void nudge(glm::vec2 dx) { m_position += dx; }
 
 protected:
 	float m_height = 0;

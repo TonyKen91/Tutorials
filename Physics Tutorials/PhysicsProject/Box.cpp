@@ -69,29 +69,20 @@ void Box::CollideWithSphere(Sphere* pOther)
 	// get the local position of the circle centre
 	glm::vec2 localPos(glm::dot(m_localX, circlePos), glm::dot(m_localY, circlePos));
 
-	bool xDirection;
-
-	if (m_extents.x*m_extents.x - localPos.x*localPos.x < m_extents.y*m_extents.y - localPos.y*localPos.y)
-		xDirection = true;
-	else
-		xDirection = false;
-
 	if (localPos.y < h2 && localPos.y > -h2)
 	{
 		if (localPos.x > 0 && localPos.x < w2 + pOther->getRadius())
 		{
 			numContacts++;
 			contact += glm::vec2(w2, localPos.y);
-			if (xDirection)
-				direction = new glm::vec2(m_localX);
+			direction = new glm::vec2(m_localX);
 			//std::cout << "Circle is on the right" << std::endl;
 		}
 		if (localPos.x < 0 && localPos.x > -(w2 + pOther->getRadius()))
 		{
 			numContacts++;
 			contact += glm::vec2(-w2, localPos.y);
-			if (xDirection)
-				direction = new glm::vec2(-m_localX);
+			direction = new glm::vec2(-m_localX);
 			//std::cout << "Circle is on the left" << std::endl;
 		}
 	}
@@ -102,16 +93,14 @@ void Box::CollideWithSphere(Sphere* pOther)
 		{
 			numContacts++;
 			contact += glm::vec2(localPos.x, h2);
-			if (!xDirection)
-				direction = new glm::vec2(m_localY);
+			direction = new glm::vec2(m_localY);
 			//std::cout << "Circle is on top" << std::endl;
 		}
 		if (localPos.y < 0 && localPos.y > -(h2 + pOther->getRadius()))
 		{
 			numContacts++;
 			contact += glm::vec2(localPos.x, -h2);
-			if (!xDirection)
-				direction = new glm::vec2(-m_localY);
+			direction = new glm::vec2(-m_localY);
 			//std::cout << "Circle is below" << std::endl;
 		}
 	}
@@ -128,9 +117,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 		float pen = pOther->getRadius() - glm::length(contact - pOther->getPosition());
 
 		glm::vec2 penVec = glm::normalize(contact - pOther->getPosition()) * pen;
-		std::cout << "Normal: " << penVec.x << " , " << penVec.y << std::endl;
 
-		penVec *= pen;
 		/////////////////////////////////////////////////////////////////////////////////////
 		//glm::vec2 norm;
 		//if (direction != nullptr)
@@ -153,6 +140,39 @@ void Box::CollideWithSphere(Sphere* pOther)
 		//	pOther->setPosition(pOther->getPosition() + displacement * 0.5f);
 		///////////////////////////////////////////////////////////////////////////////////////////
 
+		// This is used to search for the minimum penetration
+		float penetration = 0;
+		float cirleRadius = pOther->getRadius();
+		glm::vec2 edgeNormal(0,0);
+
+		float pen0 = m_extents.x - (localPos.x - cirleRadius);
+		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		{
+			edgeNormal = m_localX;
+			penetration = pen0;
+		}
+
+		pen0 = m_extents.x + (localPos.x - cirleRadius);
+		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		{
+			edgeNormal = -m_localX;
+			penetration = pen0;
+		}
+
+		pen0 = m_extents.y - (localPos.y - cirleRadius);
+		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		{
+			edgeNormal = m_localY;
+			penetration = pen0;
+		}
+
+		pen0 = m_extents.y + (localPos.y - cirleRadius);
+		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		{
+			edgeNormal = -m_localY;
+			penetration = pen0;
+		}
+
 
 		/////////////////////////////////////////////////////////////////
 		// move each shape away in the direction of penetration depending on if they are static or kinematic
@@ -165,9 +185,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 			m_position += penVec;
 		else if (!pOther->isKinematic())
 		{
-			float penVecSq = glm::dot(penVec, penVec);
-			if (m_extents.x*m_extents.x - localPos.x*localPos.x < penVecSq)
-				penVec = ;
+			pOther->nudge(-edgeNormal * penetration);
 			pOther->setPosition(pOther->getPosition() - penVec);
 		}
 		///////////////////////////////////////////////////////////////////////////////////////

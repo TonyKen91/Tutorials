@@ -33,6 +33,7 @@ public:
 	virtual float getTotalEnergy();
 	virtual void setDespawnTimer(float timer);
 
+	void nudge(glm::vec2 dx) { m_position += dx; }
 
 
 	void setKinematic(bool state); 
