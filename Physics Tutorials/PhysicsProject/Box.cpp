@@ -69,20 +69,29 @@ void Box::CollideWithSphere(Sphere* pOther)
 	// get the local position of the circle centre
 	glm::vec2 localPos(glm::dot(m_localX, circlePos), glm::dot(m_localY, circlePos));
 
+	bool xDirection;
+
+	if (m_extents.x*m_extents.x - localPos.x*localPos.x < m_extents.y*m_extents.y - localPos.y*localPos.y)
+		xDirection = true;
+	else
+		xDirection = false;
+
 	if (localPos.y < h2 && localPos.y > -h2)
 	{
 		if (localPos.x > 0 && localPos.x < w2 + pOther->getRadius())
 		{
 			numContacts++;
 			contact += glm::vec2(w2, localPos.y);
-			direction = new glm::vec2(m_localX);
+			if (xDirection)
+				direction = new glm::vec2(m_localX);
 			//std::cout << "Circle is on the right" << std::endl;
 		}
 		if (localPos.x < 0 && localPos.x > -(w2 + pOther->getRadius()))
 		{
 			numContacts++;
 			contact += glm::vec2(-w2, localPos.y);
-			direction = new glm::vec2(-m_localX);
+			if (xDirection)
+				direction = new glm::vec2(-m_localX);
 			//std::cout << "Circle is on the left" << std::endl;
 		}
 	}
@@ -93,7 +102,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 		{
 			numContacts++;
 			contact += glm::vec2(localPos.x, h2);
-			if (direction == nullptr && localPos.x * localPos.x > localPos.y * localPos.y)
+			if (!xDirection)
 				direction = new glm::vec2(m_localY);
 			//std::cout << "Circle is on top" << std::endl;
 		}
@@ -101,7 +110,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 		{
 			numContacts++;
 			contact += glm::vec2(localPos.x, -h2);
-			if (direction == nullptr && localPos.x * localPos.x > localPos.y * localPos.y)
+			if (!xDirection)
 				direction = new glm::vec2(-m_localY);
 			//std::cout << "Circle is below" << std::endl;
 		}
@@ -110,6 +119,8 @@ void Box::CollideWithSphere(Sphere* pOther)
 
 	if (numContacts > 0)
 	{
+		//std::cout << "Number of contacts: " << numContacts << std::endl;
+		//std::cout << "contact: " << contact.x << " , " << contact.y << std::endl;
 		// average, and convert back into world coordinates
 		contact = m_position + (1.0f / numContacts) * (m_localX * contact.x + m_localY * contact.y);
 
@@ -117,10 +128,33 @@ void Box::CollideWithSphere(Sphere* pOther)
 		float pen = pOther->getRadius() - glm::length(contact - pOther->getPosition());
 
 		glm::vec2 penVec = glm::normalize(contact - pOther->getPosition()) * pen;
-		//std::cout << "Number of Contact: " << numContacts << std::endl;
-		//std::cout << "penVec: " << penVec.x << " , " << penVec.y << std::endl;
+		std::cout << "Normal: " << penVec.x << " , " << penVec.y << std::endl;
+
+		penVec *= pen;
+		/////////////////////////////////////////////////////////////////////////////////////
+		//glm::vec2 norm;
+		//if (direction != nullptr)
+		//	norm = -*direction;
+		//else
+		//	norm = glm::normalize(contact - pOther->getPosition());
+		//
+		//// apply contact forces
+		//glm::vec2 displacement = pen * norm;
+
+		//// move each shape away in the direction of penetration
+		//if (!m_isKinematic && !pOther->isKinematic())
+		//{
+		//	nudge(-displacement * 0.5f);
+		//	pOther->setPosition(pOther->getPosition() + displacement*0.5f);
+		//}
+		//else if (!m_isKinematic)
+		//	nudge(-displacement);
+		//else if (!pOther->isKinematic())
+		//	pOther->setPosition(pOther->getPosition() + displacement * 0.5f);
+		///////////////////////////////////////////////////////////////////////////////////////////
 
 
+		/////////////////////////////////////////////////////////////////
 		// move each shape away in the direction of penetration depending on if they are static or kinematic
 		if (!m_isKinematic && !pOther->isKinematic())
 		{
@@ -130,7 +164,22 @@ void Box::CollideWithSphere(Sphere* pOther)
 		else if (!m_isKinematic)
 			m_position += penVec;
 		else if (!pOther->isKinematic())
+		{
+			float penVecSq = glm::dot(penVec, penVec);
+			if (m_extents.x*m_extents.x - localPos.x*localPos.x < penVecSq)
+				penVec = ;
 			pOther->setPosition(pOther->getPosition() - penVec);
+		}
+		///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 		//
 		//glm::vec2 delta = pOther->getPosition() - m_position;
@@ -318,6 +367,8 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 	contact += m_position + (localContact.x * m_localX + localContact.y * m_localY) / (float)numLocalContacts;
 	numContacts++;
 
+
+	// This is used to search for the minimum penetration
 	float pen0 = box.m_extents.x - minX;
 	if (pen0 > 0 && (pen0 < pen || pen == 0))
 	{
