@@ -140,38 +140,38 @@ void Box::CollideWithSphere(Sphere* pOther)
 		//	pOther->setPosition(pOther->getPosition() + displacement * 0.5f);
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		// This is used to search for the minimum penetration
-		float penetration = 0;
-		float cirleRadius = pOther->getRadius();
-		glm::vec2 edgeNormal(0,0);
+		//// This is used to search for the minimum penetration
+		//float penetration = 0;
+		//float cirleRadius = pOther->getRadius();
+		//glm::vec2 edgeNormal(0,0);
 
-		float pen0 = m_extents.x - (localPos.x - cirleRadius);
-		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		{
-			edgeNormal = m_localX;
-			penetration = pen0;
-		}
+		//float pen0 = m_extents.x - (localPos.x - cirleRadius);
+		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		//{
+		//	edgeNormal = m_localX;
+		//	penetration = pen0;
+		//}
 
-		pen0 = m_extents.x + (localPos.x - cirleRadius);
-		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		{
-			edgeNormal = -m_localX;
-			penetration = pen0;
-		}
+		//pen0 = m_extents.x + (localPos.x - cirleRadius);
+		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		//{
+		//	edgeNormal = -m_localX;
+		//	penetration = pen0;
+		//}
 
-		pen0 = m_extents.y - (localPos.y - cirleRadius);
-		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		{
-			edgeNormal = m_localY;
-			penetration = pen0;
-		}
+		//pen0 = m_extents.y - (localPos.y - cirleRadius);
+		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		//{
+		//	edgeNormal = m_localY;
+		//	penetration = pen0;
+		//}
 
-		pen0 = m_extents.y + (localPos.y - cirleRadius);
-		if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		{
-			edgeNormal = -m_localY;
-			penetration = pen0;
-		}
+		//pen0 = m_extents.y + (localPos.y - cirleRadius);
+		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
+		//{
+		//	edgeNormal = -m_localY;
+		//	penetration = pen0;
+		//}
 
 
 		/////////////////////////////////////////////////////////////////
@@ -185,7 +185,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 			m_position += penVec;
 		else if (!pOther->isKinematic())
 		{
-			pOther->nudge(-edgeNormal * penetration);
+			//pOther->nudge(-edgeNormal * penetration);
 			pOther->setPosition(pOther->getPosition() - penVec);
 		}
 		///////////////////////////////////////////////////////////////////////////////////////
