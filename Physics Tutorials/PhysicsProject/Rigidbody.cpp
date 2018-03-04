@@ -19,45 +19,61 @@ Rigidbody::~Rigidbody()
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// This function is updates the physics of the object
+// It takes in the following arguments:
+// glm::vec2 gravity which is the acceleration due to gravity
+// float timeStep which is the timeStep that defines the frame rate of the scene
+//////////////////////////////////////////////////////////////////////////////////////////
 void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
+	// Checks if the object is kinematic and if it is then it turns velocities off and masses to max and exits the function
 	if (m_isKinematic)
 	{
 		m_velocity = { 0,0 };
 		m_angularVelocity = 0;
-		// warning - we're losing the original mass and moment here. THis could be an issue if we 
-		// switch kinematic on and then off again at runtime
 		m_mass = INT_MAX;
 		m_inertia = INT_MAX;
 		return;
 	}
 	
+	// Checks if the object is despawnable
 	if (m_despawnable)
 	{
+		// if the object is despawnable then it updates the despawnTimer every frame
 		m_despawnTimer -= timeStep;
+		// if the despawn timer have reach zero, it will then add the object to the remove list of the scene it is in
 		if (m_despawnTimer <= 0)
 		{
 			m_scene->addToRemoveList(this);
 		}
 	}
 
-	m_velocity += gravity * timeStep;
-
-
+	// adds drag into the velocity
 	m_velocity *= (1 - m_linearDrag * timeStep);
+	// adds angular velocity to the rotation of the object
 	m_rotation += m_angularVelocity * timeStep;
+	// reduces the angular velocity using the angular drag
 	m_angularVelocity -= m_angularVelocity *m_angularDrag * timeStep;
 
+	// applies sleep if applicable
 	applySleepThreshold(gravity, timeStep);
 
+	// updates position and velocity
 	m_position += m_velocity * timeStep;
 	m_velocity += gravity*timeStep;
-	//applyForce(gravity * m_mass * timeStep, glm::vec2(0, 0));
 
+	// reapplies sleep if possible
 	applySleepThreshold(gravity, timeStep);
 
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// This function is apply force to the rigidbody
+// It takes in the following arguments:
+// glm::vec2 force is the force that will be applied to the body
+// glm::vec2 pos is the position of the force in relation to the centre mass of the body
+//////////////////////////////////////////////////////////////////////////////////////////
 void Rigidbody::applyForce(glm::vec2 force, glm::vec2 pos)
 {
 	// These calculation calculates instantaneous velocity and angular velocity which are then added to the cumulative velocities
@@ -65,7 +81,13 @@ void Rigidbody::applyForce(glm::vec2 force, glm::vec2 pos)
 	m_angularVelocity += (force.y * pos.x - force.x * pos.y) / m_inertia; // This adds torque/moment x and y component to the angular velocity per frame
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////
+// This function is used to resolve collision between objects
+// It takes in the following arguments:
+// Rigidbody* actor2 is a pointer reference to the second object
+// glm::vec2 contact is the contact point of the two actors
+// glm::vec2* collisionNormal is the normal of the collision
+/////////////////////////////////////////////////////////////////////////////////
 void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec2* collisionNormal)
 {
 	// find the vector between their centres or use the provided direction of force
@@ -103,37 +125,32 @@ void Rigidbody::resolveCollision(Rigidbody * actor2, glm::vec2 contact, glm::vec
 		applyForce(-force, contact - m_position);
 		actor2->applyForce(force, contact - actor2->m_position);
 	}
-
-	// This part is the previous code before rotation tutorial
-
-	//glm::vec2 normal = glm::normalize(actor2->getPosition() - m_position);
-	//glm::vec2 relativeVelocity = actor2->getVelocity() - m_velocity;
-
-	//if (glm::dot(normal, relativeVelocity) >= 0)
-	//	return;
-
-	//float elasticity = (m_elasticity + actor2->getElasticity()) / 2.0f;
-
-	//float j = (glm::dot( -(1 + m_elasticity) * (relativeVelocity), normal) )/ glm::dot(normal, normal * ((1 / m_mass) + (1 / actor2->getMass())));
-
-	//glm::vec2  force = normal * j;
-
-	//applyForceToActor(actor2, force);
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+// This function is used to turn on or off sleeping state of object
+// It takes in glm::vec2 gravity argument and float timeStep
+// Gravity is used to check if an object is just temporarily stationary
+// Timestep is used for the same check as well
+/////////////////////////////////////////////////////////////////////////////////
 void Rigidbody::applySleepThreshold(glm::vec2 gravity, float timeStep)
 {
+	// Turns off velocity if the object is below sleeping threshold and not temporarily stationary
 	if (glm::length(m_velocity) < MIN_LINEAR_THRESHOLD)
 		if (glm::length(m_velocity) < glm::length(gravity)*m_linearDrag*timeStep)
 			m_velocity = glm::vec2(0, 0);
+	// Turns angular velocity to 0 if it's below the sleeping threshold
 	if (abs(m_angularVelocity) < MIN_ROTATION_THRESHOLD)
 		m_angularVelocity = 0;
 
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+// This function is used to convert from local to world coordinates
+// It takes in glm::vec2 argument where the contact occured
+/////////////////////////////////////////////////////////////////////////////////
 glm::vec2 Rigidbody::toWorld(glm::vec2 contact)
 {
-	// This function is used to convert from local to world coordinates
 	// This can be done by either using the m_localX and m_localY
 	// or calculate it using the objects rotation variable
 	// or use a translation matrix and multiply your local coordinate by this matrix
@@ -160,14 +177,22 @@ float Rigidbody::getTotalEnergy()
 	return total;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to set kinematics on or off
+// This function takes in a bool argument called state which defines if the object is kinematic or not
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Rigidbody::setKinematic(bool state)
 { 
+	// This is used to retain memory if the object is kinematic or not
 	m_isKinematic = state;
+	
+	// If the object is not kinematic or kinematic is turned off then it resets the mass and inertia to original value
 	if (state == false)
 	{
 		m_mass = m_originalMass;
 		m_inertia = m_originalInertia;
 	}
+	// if the object is kinematic, this turns mass and inertia to infinity and its velocities to 0
 	else
 	{
 		m_velocity = { 0,0 };
@@ -178,7 +203,10 @@ void Rigidbody::setKinematic(bool state)
 
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This is used to set the despawn timer
+// This function takes in a float argument called timer which is timer of how long before the object despawns
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Rigidbody::setDespawnTimer(float timer)
 {
 	m_despawnable = true;

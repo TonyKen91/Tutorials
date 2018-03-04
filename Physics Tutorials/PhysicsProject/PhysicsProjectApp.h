@@ -38,4 +38,5 @@ private:
 	const float aspectRatio = 16 / 9.0f;
 	int springNumber = 0;
 	int ballNumber = 0;
+	int pageNumber = 0;
 };

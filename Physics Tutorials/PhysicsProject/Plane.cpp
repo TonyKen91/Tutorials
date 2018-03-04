@@ -39,9 +39,6 @@ void Plane::draw()
 	aie::Gizmos::add2DLine(start, end, colour);
 }
 
-void Plane::resetPosition()
-{
-}
 
 void Plane::resolveCollision(Rigidbody* actor2, glm::vec2 contact)
 {
@@ -59,21 +56,6 @@ void Plane::resolveCollision(Rigidbody* actor2, glm::vec2 contact)
 void Plane::CollideWithSphere(Sphere * pOther)
 {
 	pOther->CollideWithPlane(this);
-	//glm::vec2 collisionNormal = m_normal;
-
-	//float sphereToPlane = glm::dot(pOther->getPosition() , m_normal) - m_distanceToOrigin;
-
-	//// if the sphere is behind the plane then both need to be flipped
-	//if (sphereToPlane < 0)
-	//{
-	//	collisionNormal *= -1;
-	//	sphereToPlane *= -1;
-	//}
-
-	//float interesection = pOther->getRadius() - sphereToPlane;
-	//if (interesection > 0)
-	//	pOther->getVelocity *= 0;
-
 }
 
 void Plane::CollideWithPlane(Plane * pOther)

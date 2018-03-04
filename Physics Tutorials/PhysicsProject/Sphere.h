@@ -8,7 +8,6 @@ public:
 	~Sphere();
 
 	virtual void draw();
-	//virtual bool checkCollision(PhysicsObject* pOther);
 
 	float getRadius() { return m_radius; }
 	glm::vec4 getColour() { return m_colour; }
@@ -20,10 +19,6 @@ public:
 	virtual void CollideWithSphere(Sphere* pOther);
 	virtual void CollideWithPlane(Plane* pOther);
 	virtual void CollideWithBox(Box* pOther);
-
-
-	//virtual void CollideWithObj(PhysicsObject* obj) { obj->CollideWithSphere(this); }
-	//virtual void CollideWithSphere(Sphere * sphere);
 
 protected:
 	float m_radius;

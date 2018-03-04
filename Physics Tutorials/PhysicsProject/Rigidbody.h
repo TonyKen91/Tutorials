@@ -17,20 +17,25 @@ public:
 
 	glm::vec2 toWorld(glm::vec2 contact);
 
+
+
+
+
+	// Getter functions which are used to get properties of the rigid body
 	glm::vec2 getPosition() { return m_position; }
 	glm::vec2 getVelocity() { return m_velocity; }
 	float getRotation() { return m_rotation; }
 	float getMass() { return (m_isKinematic) ? INT_MAX : m_mass; }
-
+	float getElasticity() { return m_elasticity; }
+	
+	virtual float getTotalEnergy();
 	virtual float getLinearKineticEnergy(); 
 	virtual float getRotationalKineticEnergy() { return ((0.5f)*m_inertia * m_angularVelocity * m_angularVelocity); }
 	float getPotentialGravitationalEnergy(glm::vec2 gravity);
 
-	float getElasticity() { return m_elasticity; }
-
+	// This is used to set the rigidbody's position
 	void setPosition(glm::vec2 position) { m_position = position; }
 
-	virtual float getTotalEnergy();
 	virtual void setDespawnTimer(float timer);
 
 	void nudge(glm::vec2 dx) { m_position += dx; }

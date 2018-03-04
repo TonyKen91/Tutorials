@@ -1,0 +1,15 @@
+﻿  Box.cpp
+  PhysicsObject.cpp
+  PhysicsProjectApp.cpp
+  main.cpp
+  PhysicsScene.cpp
+  Plane.cpp
+  Rigidbody.cpp
+Rigidbody.cpp(35): warning C4305: '=': truncation from 'int' to 'float'
+Rigidbody.cpp(36): warning C4305: '=': truncation from 'int' to 'float'
+Rigidbody.cpp(200): warning C4305: '=': truncation from 'int' to 'float'
+Rigidbody.cpp(201): warning C4305: '=': truncation from 'int' to 'float'
+  Sphere.cpp
+  Spring.cpp
+LINK : fatal error C1047: The object or library file 'C:\Users\Antoine\Desktop\Repository2018\Tutorials\Physics Tutorials\temp\PhysicsProject\Win32\Release\Box.obj' was created with an older compiler than other objects; rebuild old objects and libraries
+LINK : fatal error LNK1257: code generation failed

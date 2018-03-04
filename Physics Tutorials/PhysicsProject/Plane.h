@@ -13,7 +13,6 @@ public:
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep) {}
 	virtual void debug() {}
 	virtual void draw();
-	virtual void resetPosition();
 
 	void resolveCollision(Rigidbody* actor2, glm::vec2 contact);
 

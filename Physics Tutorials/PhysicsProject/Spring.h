@@ -14,7 +14,6 @@ public:
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
 	virtual void debug() {}
 	virtual void draw();
-	virtual void resetPosition() {};
 	virtual float getTotalEnergy();
 	virtual float getLinearKineticEnergy();
 	virtual float getRotationalKineticEnergy();
