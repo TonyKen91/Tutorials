@@ -36,12 +36,17 @@ void Rigidbody::fixedUpdate(glm::vec2 gravity, float timeStep)
 		m_inertia = INT_MAX;
 		return;
 	}
-	
+
 	// Checks if the object is despawnable
 	if (m_despawnable)
 	{
-		// if the object is despawnable then it updates the despawnTimer every frame
-		m_despawnTimer -= timeStep;
+		// If object is not in non-despawnable area, reduce timer
+		if (glm::distance(m_position, m_scene->centreSphere->getPosition()) > m_scene->restrictedRadius - 20)
+		{
+			// if the object is despawnable then it updates the despawnTimer every frame
+			m_despawnTimer -= timeStep;
+		}
+
 		// if the despawn timer have reach zero, it will then add the object to the remove list of the scene it is in
 		if (m_despawnTimer <= 0)
 		{

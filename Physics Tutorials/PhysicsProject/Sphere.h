@@ -1,5 +1,7 @@
 #pragma once
+#include <string>
 #include "Rigidbody.h"
+
 class Sphere : public Rigidbody
 {
 public:
@@ -20,9 +22,12 @@ public:
 	virtual void CollideWithPlane(Plane* pOther);
 	virtual void CollideWithBox(Box* pOther);
 
+	std::string m_name = "No Name";
+
 protected:
 	float m_radius;
 	glm::vec4 m_colour;
 	int m_segments = 50;
+	int gridCollision = 0;
 };
 

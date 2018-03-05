@@ -26,22 +26,11 @@ void Sphere::draw()
 	aie::Gizmos::add2DLine(m_position, m_position + end, glm::vec4(1, 1, 1, 1));
 }
 
-//bool Sphere::checkCollision(PhysicsObject * pOther)
-//{
-//	Sphere* pOtherSphere = dynamic_cast<Sphere*>(pOther);
-//	if (pOtherSphere != nullptr)
-//	{
-//		if ((m_radius + pOtherSphere->m_radius) > glm::distance(m_position, pOtherSphere->m_position))
-//			return true;
-//		else
-//			return false;
-//	}
-//	return false;
-//}
-
 void Sphere::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
 	Rigidbody::fixedUpdate(gravity, timeStep);
+	gridCollision = 0;
+	inGrid = false;
 
 	// store the local axes
 	float cs = cosf(m_rotation);
@@ -74,7 +63,12 @@ void Sphere::CollideWithSphere(Sphere * pOther)
 		else if (!pOther->isKinematic())
 			pOther->m_position -= contactForce * 2.0f;
 
-
+		if (pOther->m_name == "Grid Ball")
+		{
+			gridCollision++;
+			if (gridCollision >= 4)
+				inGrid = true;
+		}
 
 		// respond to the collision
 		resolveCollision(pOther, 0.5f * (m_position + pOther->getPosition()));

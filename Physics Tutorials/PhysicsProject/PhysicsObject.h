@@ -39,6 +39,8 @@ public:
 
 	~PhysicsObject();
 	ShapeType getShapeID() { return m_shapeID; }
+	bool inGrid = false;
+
 
 protected:
 	ShapeType m_shapeID;

@@ -56,6 +56,7 @@ void PhysicsScene::update(float dt)
 	// update physics at a fixed time step
 	static float accumulatedTime = 0.0f;
 	accumulatedTime += dt;
+	m_ballsInGrid = 0;
 
 	// This is used to calculate all calculation within the timestep that didn't get calculate which might be caused by lags
 	while (accumulatedTime >= m_timeStep)
@@ -96,6 +97,12 @@ void PhysicsScene::update(float dt)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void PhysicsScene::updateGizmos()
 {
+	if (centreSphere != nullptr)
+	{
+		// used to draw the restricted area boundary
+		aie::Gizmos::add2DCircle(centreSphere->getPosition(), restrictedRadius, 50, glm::vec4(1, 1, 1, 0.1f));
+		aie::Gizmos::add2DCircle(centreSphere->getPosition(), restrictedRadius - 20, 50, glm::vec4(0.5f, 0.5f, 0.5f, 1));
+	}
 	for (auto pActor : m_actors)
 	{
 		pActor->draw();
@@ -127,7 +134,11 @@ void PhysicsScene::checkForCollision()
 
 			object1->Collide(object2);
 		}
+		if (object1->inGrid)
+			m_ballsInGrid++;
 	}
+	if (m_ballsInGrid >= 16)
+		victoryCondition = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

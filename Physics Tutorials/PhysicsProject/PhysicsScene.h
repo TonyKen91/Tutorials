@@ -31,6 +31,9 @@ public:
 	void addToRemoveList(PhysicsObject* actor);
 
 	bool isGameOver = false;
+	Sphere* centreSphere = nullptr;
+	float	restrictedRadius = 50;
+	bool	victoryCondition = false;
 
 	float totalEnergy;
 	float linearKinetic;
@@ -40,6 +43,7 @@ protected:
 
 	glm::vec2 m_gravity;
 	float m_timeStep;
+	int m_ballsInGrid;
 	std::list<PhysicsObject*> m_actors;
 	std::list<PhysicsObject*> m_collidable;
 	std::list<PhysicsObject*> m_deletedObjects;

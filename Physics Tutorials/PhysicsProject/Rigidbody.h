@@ -12,14 +12,8 @@ public:
 	virtual void fixedUpdate(glm::vec2 gravity, float timeStep);
 	void applyForce(glm::vec2 force, glm::vec2 pos);
 	void resolveCollision(Rigidbody* actor2, glm::vec2 contact, glm::vec2* collisionNormal = nullptr);
-
 	void applySleepThreshold(glm::vec2 gravity, float timeStep);
-
 	glm::vec2 toWorld(glm::vec2 contact);
-
-
-
-
 
 	// Getter functions which are used to get properties of the rigid body
 	glm::vec2 getPosition() { return m_position; }
@@ -33,15 +27,12 @@ public:
 	virtual float getRotationalKineticEnergy() { return ((0.5f)*m_inertia * m_angularVelocity * m_angularVelocity); }
 	float getPotentialGravitationalEnergy(glm::vec2 gravity);
 
-	// This is used to set the rigidbody's position
+	// Setter functions for rigid body's properties
 	void setPosition(glm::vec2 position) { m_position = position; }
-
 	virtual void setDespawnTimer(float timer);
+	void setKinematic(bool state);
 
 	void nudge(glm::vec2 dx) { m_position += dx; }
-
-
-	void setKinematic(bool state); 
 	bool isKinematic() { return m_isKinematic; }
 
 protected:
@@ -63,6 +54,7 @@ protected:
 	float m_inertia = 0;
 
 	bool m_isKinematic;
+	bool m_scoreGiven = false;
 
 	float m_despawnTimer = 5.0f;
 	bool m_despawnable = false;
