@@ -25,6 +25,11 @@ bool PhysicsProjectApp::startup() {
 	// the following path would be used instead: "./font/consolas.ttf"
 	m_font = new aie::Font("../bin/font/consolas.ttf", 15);
 
+	m_menuFont = new aie::Font("../bin/font/consolas.ttf", 30);
+
+	m_gameOverFont = new aie::Font("../bin/font/consolas.ttf", 75);
+
+
 	// Initialise the game scene for the project and setting the gravity and timeStep for the physics calculation
 	m_gameScene = new PhysicsScene();
 	m_gameScene->setGravity(vec2(0, 0));
@@ -249,49 +254,91 @@ void PhysicsProjectApp::update(float deltaTime) {
 	mouseX = (int)(mouseX * 200 / screenSize.x) - 100;
 	mouseY = (int)(mouseY * 200 / (screenSize.y * aspectRatio) - 100/aspectRatio);
 
-	// Updates the test scene
-	//m_testScene->update(deltaTime);
-	//m_testScene->updateGizmos();
-
-	// Updates the game scene and Gizmo
-	m_gameScene->update(deltaTime);
-	m_gameScene->updateGizmos();
-
-	// Spawns a ball in the game scene from the left
-	if (input->wasKeyPressed(aie::INPUT_KEY_RIGHT))
+	// Main menu
+	if (pageNumber == 0)
 	{
-		Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1),0, 0.5f);
-		playerBall->setDespawnTimer(20);
-		m_gameScene->addActor(playerBall);
+		// Chooses which scene to go to in accordance to player input
+		if (input->wasKeyPressed(aie::INPUT_KEY_1))
+		{
+			pageNumber = 1;
+		}
+		else if (input->wasKeyPressed(aie::INPUT_KEY_2))
+		{
+			pageNumber = 2;
+		}
+		// exit the application
+		if (input->wasKeyPressed(aie::INPUT_KEY_ESCAPE))
+			quit();
 	}
 
-	// Spawns a ball in the game scene from the right
-	if (input->wasKeyPressed(aie::INPUT_KEY_LEFT))
+	else if (pageNumber == 1)
 	{
-		Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(-100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
-		playerBall->setDespawnTimer(20);
-		m_gameScene->addActor(playerBall);
+		// Updates the game scene and Gizmo
+		m_gameScene->update(deltaTime);
+		m_gameScene->updateGizmos();
+
+		// Spawns a ball in the game scene from the left
+		if (input->wasKeyPressed(aie::INPUT_KEY_RIGHT))
+		{
+			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
+			playerBall->setDespawnTimer(20);
+			m_gameScene->addActor(playerBall);
+		}
+
+		// Spawns a ball in the game scene from the right
+		if (input->wasKeyPressed(aie::INPUT_KEY_LEFT))
+		{
+			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(-100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
+			playerBall->setDespawnTimer(20);
+			m_gameScene->addActor(playerBall);
+		}
+
+		// Spawns a ball in the game scene from the top
+		if (input->wasKeyPressed(aie::INPUT_KEY_DOWN))
+		{
+			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(0, -100), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
+			playerBall->setDespawnTimer(20);
+			m_gameScene->addActor(playerBall);
+		}
+
+		// Spawns a ball in the game scene from the bottom
+		if (input->wasKeyPressed(aie::INPUT_KEY_UP))
+		{
+			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(0, 100), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
+			playerBall->setDespawnTimer(20);
+			m_gameScene->addActor(playerBall);
+		}
+		// Exits to main menu
+		if (input->wasKeyPressed(aie::INPUT_KEY_ESCAPE))
+		{
+			pageNumber = 0;
+		}
+		if (m_gameScene->isGameOver == true)
+			pageNumber = 3;
 	}
 
-	// Spawns a ball in the game scene from the top
-	if (input->wasKeyPressed(aie::INPUT_KEY_DOWN))
+	else if (pageNumber == 2)
 	{
-		Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(0, -100), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
-		playerBall->setDespawnTimer(20);
-		m_gameScene->addActor(playerBall);
+		// Updates the test scene
+		m_testScene->update(deltaTime);
+		m_testScene->updateGizmos();
+
+		// Exits to main menu
+		if (input->wasKeyPressed(aie::INPUT_KEY_ESCAPE))
+		{
+			pageNumber = 0;
+		}
 	}
+	if 
+	{
+		// Exits to main menu
+		if (input->wasKeyPressed(aie::INPUT_KEY_ESCAPE))
+		{
+			pageNumber = 0;
+		}
+	}
+
 	
-	// Spawns a ball in the game scene from the bottom
-	if (input->wasKeyPressed(aie::INPUT_KEY_UP))
-	{
-		Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(0, 100), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
-		playerBall->setDespawnTimer(20);
-		m_gameScene->addActor(playerBall);
-	}
-	
-	// exit the application
-	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
-		quit();
 }
 
 void PhysicsProjectApp::draw() {
@@ -305,19 +352,45 @@ void PhysicsProjectApp::draw() {
 	// draw your stuff here!
 	aie::Gizmos::draw2D(glm::ortho<float>(-100, 100, -100 / aspectRatio, 100 / aspectRatio, -1.0f, 1.0f));
 
+	if (pageNumber == 0)
+	{
+		// Shows the menu list
+		m_2dRenderer->drawText(m_menuFont, "1 Game Scene", getWindowWidth()/2.0f - 100, getWindowHeight() / 2.0f + 50);
+		m_2dRenderer->drawText(m_menuFont, "2 Test Scene", getWindowWidth() / 2.0f - 100, getWindowHeight() / 2.0f + 0);
+		m_2dRenderer->drawText(m_menuFont, "Press ESC to quit", getWindowWidth() / 2.0f - 100, getWindowHeight() / 2.0f - 50);
+	}
+
 	// output some text, uses the last used colour
-	m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+	else if (pageNumber == 2)
+	{
+		// These are used to show the total kinetic energy, linear kinetic energy and rotational kinetic energy
+		char energy[50];
+		sprintf_s(energy, 50, "Total Kinetic Energy: %f", m_testScene->totalEnergy);
+		m_2dRenderer->drawText(m_font, energy, 0, 20);
 
-	// These are used to show the total kinetic energy, linear kinetic energy and rotational kinetic energy
-	char energy[50];
-	sprintf_s(energy, 50, "Total Kinetic Energy: %f", m_gameScene->totalEnergy);
-	m_2dRenderer->drawText(m_font, energy, 0, 20);
+		sprintf_s(energy, 50, "Linear Kinetic Energy: %f", m_testScene->linearKinetic);
+		m_2dRenderer->drawText(m_font, energy, 0, 60);
 
-	sprintf_s(energy, 50, "Linear Kinetic Energy: %f", m_gameScene->linearKinetic);
-	m_2dRenderer->drawText(m_font, energy, 0, 60);
+		sprintf_s(energy, 50, "Rotational Kinetic Energy: %f", m_testScene->rotationalKinetic);
+		m_2dRenderer->drawText(m_font, energy, 0, 40);
+	}
 
-	sprintf_s(energy, 50, "Rotational Kinetic Energy: %f", m_gameScene->rotationalKinetic);
-	m_2dRenderer->drawText(m_font, energy, 0, 40);
+	else if (pageNumber == 3)
+	{
+		// Sets the font colour to red
+		m_2dRenderer->setRenderColour(1, 0, 0);
+		// Writes game over on screen
+		m_2dRenderer->drawText(m_gameOverFont, "GAME OVER", getWindowWidth() / 2.0f - 150, getWindowHeight() / 2.0f);
+		m_2dRenderer->drawText(m_menuFont, "Press ESC to quit", getWindowWidth() / 2.0f - 100, getWindowHeight() / 2.0f - 50);
+	}
+
+
+	if (pageNumber != 0)
+	{
+		// Gives player instruction when in different scenes to get back to main menu
+		m_2dRenderer->setRenderColour(1, 1, 1);
+		m_2dRenderer->drawText(m_font, "Press ESC to quit", 0, 0);
+	}
 
 
 	// done drawing sprites

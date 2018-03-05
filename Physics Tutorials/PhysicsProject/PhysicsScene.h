@@ -30,6 +30,8 @@ public:
 
 	void addToRemoveList(PhysicsObject* actor);
 
+	bool isGameOver = false;
+
 	float totalEnergy;
 	float linearKinetic;
 	float rotationalKinetic;

@@ -35,7 +35,7 @@ void Spring::fixedUpdate(glm::vec2 gravity, float timeStep)
 	if (m_breakable && length > m_breakPoint)
 	{
 		m_scene->addToRemoveList(this);
-		std::cout << "You broke one of the springs therefore gameover" << std::endl;
+		m_scene->isGameOver = true;
 		return;
 	}
 

@@ -29,14 +29,16 @@ protected:
 
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
+	aie::Font*			m_menuFont;
+	aie::Font*			m_gameOverFont;
 
 	PhysicsScene*		m_gameScene;
 	PhysicsScene*		m_testScene;
 	float				m_totalEnergy = 0;
 
 private:
-	const float aspectRatio = 16 / 9.0f;
-	int springNumber = 0;
-	int ballNumber = 0;
-	int pageNumber = 0;
+	const float			aspectRatio = 16 / 9.0f;
+	int					springNumber = 0;
+	int					ballNumber = 0;
+	int					pageNumber = 0;
 };
