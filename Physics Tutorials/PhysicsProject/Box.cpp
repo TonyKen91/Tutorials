@@ -1,5 +1,4 @@
 #include "Box.h"
-
 #include "Plane.h"
 #include "Sphere.h"
 
@@ -7,17 +6,35 @@
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// This is box's constructor which creates the instance of box
+// It takes in the following arguments:
+// glm::vec2 position which is the location of the box in reference to the Gizmos' origin
+// glm::vec2 velocity which determines the box's initial velocity
+// float mass which is the mass of the box which is used in physics calculation
+// float height which determines the height of the box
+// float width which determines the width of the box
+// glm::vec4 colour uses a RGBA to determine the colour and opacity of the object
+// float rotation which states the initial orientation
+// float elasticity defines how elastic it is which determine its bounce
+// float linearDrag which is used to reduce the linear velocity
+// float angularDrag which is used to dampen the angular velocity of the sphere
+/////////////////////////////////////////////////////////////////////////////////////////////////
 Box::Box(glm::vec2 position, glm::vec2 velocity, float mass, float height, float width,
  glm::vec4 colour, 
 	float rotation, float elasticity, float linearDrag, float angularDrag) : 
 	Rigidbody(BOX, position, velocity, mass, rotation, elasticity, linearDrag, angularDrag)
 {
+	// This create half extents of the width and height
 	m_extents.x = width / 2;
 	m_extents.y = height / 2;
+	// Stores the box parameters
 	m_width = width;
 	m_height = height;
 	m_colour = colour;
+	// Calculate inertia of the object
 	m_inertia = 1.0f / 12.0f * mass * width * height;
+	// This stores the original inertia of the object
 	m_originalInertia = m_inertia;
 }
 
@@ -26,6 +43,14 @@ Box::~Box()
 {
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function handles the physics calculation for box and updates its properties
+// This also calculate the local axes of the object
+// It takes in the following arguments:
+// glm::vec2 gravity which is the acceleration due to gravity
+// float timeStep which is the timeStep that defines the frame rate of the scene
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Box::fixedUpdate(glm::vec2 gravity, float timeStep)
 {
 	Rigidbody::fixedUpdate(gravity, timeStep);
@@ -37,6 +62,12 @@ void Box::fixedUpdate(glm::vec2 gravity, float timeStep)
 	m_localY = glm::normalize(glm::vec2(-sn, cs));
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to check box to sphere collision
+// It then calls resolveCollision function if a collision is detected
+// It takes in the following arguments:
+// Sphere* pOther is a pointer reference to the second sphere it's checking collision with
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Box::CollideWithSphere(Sphere* pOther)
 {
 	glm::vec2 circlePos = pOther->getPosition() - m_position;
@@ -69,6 +100,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 	// get the local position of the circle centre
 	glm::vec2 localPos(glm::dot(m_localX, circlePos), glm::dot(m_localY, circlePos));
 
+	// Checks all sides of the boxes where the potential penetration occurred
 	if (localPos.y < h2 && localPos.y > -h2)
 	{
 		if (localPos.x > 0 && localPos.x < w2 + pOther->getRadius())
@@ -76,14 +108,12 @@ void Box::CollideWithSphere(Sphere* pOther)
 			numContacts++;
 			contact += glm::vec2(w2, localPos.y);
 			direction = new glm::vec2(m_localX);
-			//std::cout << "Circle is on the right" << std::endl;
 		}
 		if (localPos.x < 0 && localPos.x > -(w2 + pOther->getRadius()))
 		{
 			numContacts++;
 			contact += glm::vec2(-w2, localPos.y);
 			direction = new glm::vec2(-m_localX);
-			//std::cout << "Circle is on the left" << std::endl;
 		}
 	}
 
@@ -94,22 +124,18 @@ void Box::CollideWithSphere(Sphere* pOther)
 			numContacts++;
 			contact += glm::vec2(localPos.x, h2);
 			direction = new glm::vec2(m_localY);
-			//std::cout << "Circle is on top" << std::endl;
 		}
 		if (localPos.y < 0 && localPos.y > -(h2 + pOther->getRadius()))
 		{
 			numContacts++;
 			contact += glm::vec2(localPos.x, -h2);
 			direction = new glm::vec2(-m_localY);
-			//std::cout << "Circle is below" << std::endl;
 		}
 	}
 
 
 	if (numContacts > 0)
 	{
-		//std::cout << "Number of contacts: " << numContacts << std::endl;
-		//std::cout << "contact: " << contact.x << " , " << contact.y << std::endl;
 		// average, and convert back into world coordinates
 		contact = m_position + (1.0f / numContacts) * (m_localX * contact.x + m_localY * contact.y);
 
@@ -118,63 +144,7 @@ void Box::CollideWithSphere(Sphere* pOther)
 
 		glm::vec2 penVec = glm::normalize(contact - pOther->getPosition()) * pen;
 
-		/////////////////////////////////////////////////////////////////////////////////////
-		//glm::vec2 norm;
-		//if (direction != nullptr)
-		//	norm = -*direction;
-		//else
-		//	norm = glm::normalize(contact - pOther->getPosition());
-		//
-		//// apply contact forces
-		//glm::vec2 displacement = pen * norm;
-
-		//// move each shape away in the direction of penetration
-		//if (!m_isKinematic && !pOther->isKinematic())
-		//{
-		//	nudge(-displacement * 0.5f);
-		//	pOther->setPosition(pOther->getPosition() + displacement*0.5f);
-		//}
-		//else if (!m_isKinematic)
-		//	nudge(-displacement);
-		//else if (!pOther->isKinematic())
-		//	pOther->setPosition(pOther->getPosition() + displacement * 0.5f);
-		///////////////////////////////////////////////////////////////////////////////////////////
-
-		//// This is used to search for the minimum penetration
-		//float penetration = 0;
-		//float cirleRadius = pOther->getRadius();
-		//glm::vec2 edgeNormal(0,0);
-
-		//float pen0 = m_extents.x - (localPos.x - cirleRadius);
-		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		//{
-		//	edgeNormal = m_localX;
-		//	penetration = pen0;
-		//}
-
-		//pen0 = m_extents.x + (localPos.x - cirleRadius);
-		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		//{
-		//	edgeNormal = -m_localX;
-		//	penetration = pen0;
-		//}
-
-		//pen0 = m_extents.y - (localPos.y - cirleRadius);
-		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		//{
-		//	edgeNormal = m_localY;
-		//	penetration = pen0;
-		//}
-
-		//pen0 = m_extents.y + (localPos.y - cirleRadius);
-		//if (pen0 > 0 && (pen0 < penetration || penetration == 0))
-		//{
-		//	edgeNormal = -m_localY;
-		//	penetration = pen0;
-		//}
-
-
-		/////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		// move each shape away in the direction of penetration depending on if they are static or kinematic
 		if (!m_isKinematic && !pOther->isKinematic())
 		{
@@ -185,33 +155,23 @@ void Box::CollideWithSphere(Sphere* pOther)
 			m_position += penVec;
 		else if (!pOther->isKinematic())
 		{
-			//pOther->nudge(-edgeNormal * penetration);
 			pOther->setPosition(pOther->getPosition() - penVec);
 		}
-		///////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-
-		//
-		//glm::vec2 delta = pOther->getPosition() - m_position;
-		//float distance = glm::length(delta);
-
-		//glm::vec2 contactForce = 0.5f * (distance - ((contact-m_position) + pOther->getRadius()))*delta / distance;
-		//m_position += contactForce;
-		//pOther->setPosition(pOther->getPosition() - contactForce);
+		// Calls resolve collision
 		resolveCollision(pOther, contact, direction);
 	}
 
 	delete direction;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to check box to plane collision
+// It then calls resolveCollision function if a collision is detected
+// It takes in the following arguments:
+// Plane* pOther is a pointer reference to the plane it's checking collision with
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Box::CollideWithPlane(Plane* pOther)
 {
 	int numContacts = 0;
@@ -296,6 +256,12 @@ void Box::CollideWithPlane(Plane* pOther)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to check box to box collision
+// It then calls resolveCollision function if a collision is detected
+// It takes in the following arguments:
+// Box* pOther is a pointer reference to the box it's checking collision with
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Box::CollideWithBox(Box* pOther)
 {
 	glm::vec2 norm(0, 0);
@@ -317,9 +283,10 @@ void Box::CollideWithBox(Box* pOther)
 		// apply contact forces
 		glm::vec2 displacement = pen * norm;
 
-		// move each shape away in the direction of penetration
+
 		if (!m_isKinematic && !pOther->isKinematic())
 		{
+			// move each shape away in the direction of penetration
 			nudge(-displacement * 0.5f);
 			pOther->nudge(displacement * 0.5f);
 		}
@@ -330,14 +297,19 @@ void Box::CollideWithBox(Box* pOther)
 
 
 		resolveCollision(pOther, contact / float(numContacts), &norm);
-
-		// apply contact forces
-		//glm::vec2 displacement = pen * norm;
-		//nudge(-displacement * 0.5f);
-		//pOther->nudge(displacement * 0.5f);
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to check box corners for box to box collision
+// It takes in the following arguments:
+// Box* pOther is a pointer reference to the box it's checking collision with
+// Box& box is a direct reference to the box it's checking collision with
+// glm::vec2& contact which is where this function going to store the contact points between the 2 boxes
+// int& numContacts this states the number of contact between the boxes
+// float& pen is used to store the depth of penetration in the local axis where the shallowest penetration occurred between the two boxes
+// glm::vec2& edgeNormal which stores the edge which is normal to the penetration of the boxes
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContacts, float & pen, glm::vec2 & edgeNormal)
 {
 
@@ -375,6 +347,7 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 		}
 	}
 
+	// These parts return false if no penetration occurred between the two boxes
 	if (maxX <= -box.m_extents.x || minX >= box.m_extents.x || maxY <= -box.m_extents.y || minY >= box.m_extents.y)
 		return false;
 	if (numLocalContacts == 0)
@@ -382,6 +355,7 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 
 	bool res = false;
 
+	// Adds the contact points and average them out
 	contact += m_position + (localContact.x * m_localX + localContact.y * m_localY) / (float)numLocalContacts;
 	numContacts++;
 
@@ -426,21 +400,21 @@ bool Box::checkBoxCorners(const Box & box, glm::vec2 & contact, int & numContact
 
 
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to draw the box on the scene
+// This uses 2 triangles to make up the box
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Box::draw()
 {
-	// if only using rotation
-	// glm::mat4 transofrm = glm::rotate(m_rotation, glm::vec3(0, 0, 1));
-	// aie::Gizmos::add2DAABBFilled(getCenter(), m_extents, m_colour, &transform);
 	// draw using local axes
-
+	// This part finds the 4 corner points of a quadrilateral
 	glm::vec2 p1 = m_position - m_localX * m_extents.x + m_localY * m_extents.y;
 	glm::vec2 p2 = m_position + m_localX * m_extents.x + m_localY * m_extents.y;
 	glm::vec2 p3 = m_position + m_localX * m_extents.x - m_localY * m_extents.y;
 	glm::vec2 p4 = m_position - m_localX * m_extents.x - m_localY * m_extents.y;
 
-
-	aie::Gizmos::add2DTri(p1, p3, p2, m_colour/*glm::vec4(1, 1, 1, 1)*/);
+	// The points found earlier are then used in creating two triangles that make up the quadrilateral
+	aie::Gizmos::add2DTri(p1, p3, p2, m_colour);
 	aie::Gizmos::add2DTri(p3, p1, p4, m_colour);
 }
 

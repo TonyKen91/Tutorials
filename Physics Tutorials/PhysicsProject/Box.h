@@ -22,10 +22,6 @@ public:
 
 	bool checkBoxCorners(const Box& box, glm::vec2& contact, int& numContacts, float &pen, glm::vec2& edgeNormal);
 
-	//virtual void CollideWithObj(PhysicsObject* obj) { obj->CollideWithSphere(this); }
-	//virtual void CollideWithSphere(Sphere * sphere);
-
-
 protected:
 	float m_height = 0;
 	float m_width = 0;

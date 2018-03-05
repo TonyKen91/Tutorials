@@ -32,7 +32,7 @@ protected:
 	aie::Font*			m_menuFont;
 	aie::Font*			m_UIConditionFont;
 
-	PhysicsScene*		m_gameScene;
+	PhysicsScene*		m_atomBombGame;
 	PhysicsScene*		m_testScene;
 	float				m_totalEnergy = 0;
 

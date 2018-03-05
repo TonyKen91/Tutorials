@@ -5,6 +5,18 @@
 #define MIN_LINEAR_THRESHOLD 0.2f
 #define MIN_ROTATION_THRESHOLD 0.01f
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// This is rigidbody's constructor which creates the instance of rigidbody
+// It takes in the following arguments:
+// ShapeType shapeID which specify which type of rigidbody it is
+// glm::vec2 position which is the location of the rigidbody in reference to the Gizmos' origin
+// glm::vec2 velocity which determines the rigidbody's initial velocity
+// float mass which is the mass of the rigidbody which is used in physics calculation
+// float rotation which states the initial orientation
+// float elasticity defines how elastic it is which determine its bounce
+// float linearDrag which is used to reduce the linear velocity
+// float angularDrag which is used to dampen the angular velocity of the rigidbody
+/////////////////////////////////////////////////////////////////////////////////////////////////
 Rigidbody::Rigidbody(ShapeType shapeID, glm::vec2 position, glm::vec2 velocity, float mass, float rotation, float elasticity, float linearDrag, float angularDrag) :
 	PhysicsObject(shapeID), m_position (position), m_velocity (velocity), m_rotation(rotation), m_mass(mass), m_elasticity(elasticity), m_linearDrag(linearDrag), m_angularDrag(angularDrag)
 {
@@ -164,18 +176,28 @@ glm::vec2 Rigidbody::toWorld(glm::vec2 contact)
 	return m_position + m_localX * contact.x + m_localY * contact.y;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to calculate and return the linear kinetic energy of the body
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float Rigidbody::getLinearKineticEnergy()
 {
 	float linearKinetic = ((0.5f)*m_mass* glm::dot(m_velocity, m_velocity));
 	return linearKinetic;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to calculate and return the potential gravitational energy of the body
+// This function takes in glm::vec2 gravity which is the acceleration due to gravitational pull on the body
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float Rigidbody::getPotentialGravitationalEnergy(glm::vec2 gravity)
 {
 
 	{return (-(m_mass)*glm::dot(gravity, m_position)); }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function is used to calculate and return the total kinetic energy of the body
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float Rigidbody::getTotalEnergy()
 {
 	float total = getLinearKineticEnergy() + getRotationalKineticEnergy();

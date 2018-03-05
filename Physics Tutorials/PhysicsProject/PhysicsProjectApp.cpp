@@ -31,9 +31,9 @@ bool PhysicsProjectApp::startup() {
 
 
 	// Initialise the game scene for the project and setting the gravity and timeStep for the physics calculation
-	m_gameScene = new PhysicsScene();
-	m_gameScene->setGravity(vec2(0, 0));
-	m_gameScene->setTimeStep(0.01f);
+	m_atomBombGame = new PhysicsScene();
+	m_atomBombGame->setGravity(vec2(0, 0));
+	m_atomBombGame->setTimeStep(0.01f);
 
 	// Initialise the test scene for the project and setting the gravity and timeStep for the physics calculation
 	m_testScene = new PhysicsScene();
@@ -63,12 +63,12 @@ bool PhysicsProjectApp::startup() {
 		{
 			sphereArray[i][j] = new Sphere(vec2(i * 4, j * 4), vec2(0, 0), 1.0f, 1, vec4(0.7f, 0, 0.7f, 1));
 			sphereArray[i][j]->m_name = "Grid Ball";
-			m_gameScene->addActor(sphereArray[i][j]);
+			m_atomBombGame->addActor(sphereArray[i][j]);
 
 			// This takes a reference of the centre sphere which determines the part which the player can not spawn circle
 			if (i == height / 2 && j == width / 2)
 			{
-				m_gameScene->centreSphere = sphereArray[i][j];
+				m_atomBombGame->centreSphere = sphereArray[i][j];
 			}
 		}
 	}
@@ -84,26 +84,26 @@ bool PhysicsProjectApp::startup() {
 			if (j < width - 1)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 1], 100, 5);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 			}
 
 			// This creates the vertical springs with spring coefficient value of 100 and spring damping of 5
 			if (i < height - 1)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j], 100, 5);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 			}
 
 			// This creates the vertical springs with spring coefficient value of 100 and spring damping of 20
 			if (j < width - 1 && i < height - 1)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j + 1], 100, 20);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 			}
 			if (j >0 && i < height - 1)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 1][j - 1], 100, 20);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 			}
 
 
@@ -115,14 +115,14 @@ bool PhysicsProjectApp::startup() {
 			if (j < width - 2)
 			{//50, 20
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i][j + 2], 50, 20);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 			}
 
 			//This creates vertical bend springs with spring coefficient value of 50 and spring damping of 20 
 			if (i < height - 2)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[i + 2][j], 50, 20);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 			}
 
 			// corner springs
@@ -132,9 +132,9 @@ bool PhysicsProjectApp::startup() {
 			if (i == 0 && j == 0)
 			{
 				springMaker = new Spring(sphereArray[i][j], sphereArray[height - 1][width - 1], 10, 10);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 				springMaker = new Spring(sphereArray[i][width - 1], sphereArray[height - 1][j], 10, 10);
-				m_gameScene->addActor(springMaker);
+				m_atomBombGame->addActor(springMaker);
 
 			}
 
@@ -165,10 +165,10 @@ bool PhysicsProjectApp::startup() {
 	border4->setKinematic(true);
 
 	// Add all the borders into the game scene
-	m_gameScene->addActor(border1);
-	m_gameScene->addActor(border2);
-	m_gameScene->addActor(border3);
-	m_gameScene->addActor(border4);
+	m_atomBombGame->addActor(border1);
+	m_atomBombGame->addActor(border2);
+	m_atomBombGame->addActor(border3);
+	m_atomBombGame->addActor(border4);
 
 
 	///////////////////////////////////////////////////////////////////
@@ -239,7 +239,7 @@ void PhysicsProjectApp::shutdown() {
 	// These are used to deallocate memories
 	delete m_font;
 	delete m_2dRenderer;
-	delete m_gameScene;
+	delete m_atomBombGame;
 	delete m_testScene;
 }
 
@@ -279,14 +279,14 @@ void PhysicsProjectApp::update(float deltaTime) {
 		m_gameTimer -= deltaTime;
 
 		// Updates the game scene and Gizmo
-		m_gameScene->update(deltaTime);
-		m_gameScene->updateGizmos();
+		m_atomBombGame->update(deltaTime);
+		m_atomBombGame->updateGizmos();
 
 		glm::vec2 mousePos = { mouseX, mouseY };
 		bool inRestrictedArea = true;
 		
 		// Checks if the mouse pointer is in restricted area
-		if (glm::distance(mousePos, m_gameScene->centreSphere->getPosition()) > m_gameScene->restrictedRadius)
+		if (glm::distance(mousePos, m_atomBombGame->centreSphere->getPosition()) > m_atomBombGame->restrictedRadius)
 			inRestrictedArea = false;
 
 		// Spawns a ball in the game scene from the left
@@ -294,7 +294,7 @@ void PhysicsProjectApp::update(float deltaTime) {
 		{
 			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
 			playerBall->setDespawnTimer(20);
-			m_gameScene->addActor(playerBall);
+			m_atomBombGame->addActor(playerBall);
 		}
 
 		// Spawns a ball in the game scene from the right
@@ -302,7 +302,7 @@ void PhysicsProjectApp::update(float deltaTime) {
 		{
 			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(-100, 0), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
 			playerBall->setDespawnTimer(20);
-			m_gameScene->addActor(playerBall);
+			m_atomBombGame->addActor(playerBall);
 		}
 
 		// Spawns a ball in the game scene from the top
@@ -310,7 +310,7 @@ void PhysicsProjectApp::update(float deltaTime) {
 		{
 			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(0, -100), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
 			playerBall->setDespawnTimer(20);
-			m_gameScene->addActor(playerBall);
+			m_atomBombGame->addActor(playerBall);
 		}
 
 		// Spawns a ball in the game scene from the bottom
@@ -318,12 +318,12 @@ void PhysicsProjectApp::update(float deltaTime) {
 		{
 			Sphere* playerBall = new Sphere(vec2(mouseX, mouseY), vec2(0, 100), 10.0f, 1.9f, vec4(1, 0, 0, 1), 0, 0.5f);
 			playerBall->setDespawnTimer(20);
-			m_gameScene->addActor(playerBall);
+			m_atomBombGame->addActor(playerBall);
 		}
 		// Game over scenario
-		if (m_gameScene->isGameOver == true || (m_gameTimer <= 0))
+		if (m_atomBombGame->isGameOver == true || (m_gameTimer <= 0))
 			m_pageNumber = 3;
-		if (m_gameScene->victoryCondition == true)
+		if (m_atomBombGame->victoryCondition == true)
 			m_pageNumber = 4;
 	}
 
@@ -355,7 +355,7 @@ void PhysicsProjectApp::draw() {
 	if (m_pageNumber == 0)
 	{
 		// Shows the menu list
-		m_2dRenderer->drawText(m_menuFont, "1 Game Scene", getWindowWidth()/2.0f - 100, getWindowHeight() / 2.0f + 50);
+		m_2dRenderer->drawText(m_menuFont, "1 Atom Bombing", getWindowWidth()/2.0f - 100, getWindowHeight() / 2.0f + 50);
 		m_2dRenderer->drawText(m_menuFont, "2 Test Scene", getWindowWidth() / 2.0f - 100, getWindowHeight() / 2.0f + 0);
 		m_2dRenderer->drawText(m_menuFont, "Press ESC to quit", getWindowWidth() / 2.0f - 100, getWindowHeight() / 2.0f - 50);
 	}
